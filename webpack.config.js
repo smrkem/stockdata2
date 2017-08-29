@@ -1,6 +1,7 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const DashboardPlugin = require('webpack-dashboard/plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const srcDir = path.resolve(__dirname, 'src')
 
@@ -10,22 +11,26 @@ module.exports = {
   output: {
     filename: 'bundle.js'
   },
+  devServer: {
+    historyApiFallback: true
+  },
   module: {
     rules: [{
-      enforce: 'pre',
-      test: /\.js$/,
-      loader: 'standard-loader',
-      exclude: /node_modules/
-    },
-    {
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: /node_modules/
+    },{
+      test: /\.css$/,
+      use: ExtractTextPlugin.extract(['css-loader'])
     }]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: `${srcDir}/index.html`
+    }),
+    new ExtractTextPlugin({
+      filename: 'styles.css',
+      allChunks: true
     }),
     new DashboardPlugin()
   ]

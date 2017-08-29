@@ -1,7 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom'
 
-export class App extends Component {
-  render () {
-    return <h1>Hello kar...</h1>
-  }
-}
+import styles from './app.css'
+import Header from './components/Header/Header'
+import About from './components/About/About'
+import PostSummary from './components/PostSummary/PostSummary'
+
+const App = () => (
+  <Router>
+    <div>
+      <Header />
+      <Route path="/about" component={About}/>
+    </div>
+  </Router>
+)
+
+export default App
