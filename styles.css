@@ -479,6 +479,9 @@ ul {
   max-width: var(--site-width);
   margin: 0 auto;
 }
+.heading {
+  font-size: 3rem;
+}
 header {
   background: linear-gradient(to right, #53384c, #3f1429);
 }
@@ -511,15 +514,6 @@ header nav a:focus,
 header nav a:hover {
   color: #990066;
 }
-.heading {
-  font-size: 3rem;
-}
-
-.bio {
-  line-height: 1.7;
-  font-size: 1.8rem;
-  color: #666;
-}
 .post-summary h2 {
   font-size: 3rem;
   color: #53384c;
@@ -531,7 +525,13 @@ header nav a:hover {
   transition: color 0.3s ease;
 }
 
+.post-summary .post-excerpt,
 .post-summary .post-content {
   font-size: 1.8rem;
   line-height: 1.7;
+}
+.bio {
+  line-height: 1.7;
+  font-size: 1.8rem;
+  color: #666;
 }

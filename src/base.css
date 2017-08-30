@@ -32,3 +32,6 @@ ul {
   max-width: var(--site-width);
   margin: 0 auto;
 }
+.heading {
+  font-size: 3rem;
+}
