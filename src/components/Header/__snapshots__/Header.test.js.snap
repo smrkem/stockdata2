@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header should render as expected 1`] = `
+<header>
+  <div
+    className="container header-container"
+  >
+    <h1>
+      Matt Smrke
+    </h1>
+    <nav>
+      <ul>
+        <li>
+          <Link
+            replace={false}
+            to="/"
+          >
+            Posts
+          </Link>
+        </li>
+        <li>
+          <Link
+            replace={false}
+            to="/about"
+          >
+            About
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+`;

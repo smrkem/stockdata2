@@ -535,3 +535,12 @@ header nav a:hover {
   font-size: 1.8rem;
   color: #666;
 }
+.post-view h2 {
+  font-size: 3rem;
+  color: #53384c;
+}
+
+.post-view .post-content {
+  font-size: 1.8rem;
+  line-height: 1.7;
+}
