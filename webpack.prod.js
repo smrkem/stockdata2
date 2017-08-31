@@ -1,4 +1,5 @@
 const path = require('path')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
@@ -31,11 +32,14 @@ module.exports = {
     hints: 'error'
   },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      template: `${srcDir}/index.html`
+      template: `./index.html`
     }),
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      filename: (getPath) => {
+        return getPath('css/styles.[chunkhash:6].css').replace('css/js', 'css');
+      },
       allChunks: true
     }),
     new webpack.optimize.CommonsChunkPlugin({
