@@ -1,14 +1,17 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
-const srcDir = path.resolve(__dirname, 'src')
-
+const webpack = require('webpack')
 
 module.exports = {
-  entry: `${srcDir}/index.js`,
+  context: path.resolve(__dirname, 'src'),
+  entry: {
+    app: './index.js',
+    vendor: ['react', 'react-dom', 'react-router-dom']
+  },
   output: {
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[chunkhash:6].js',
     publicPath: '/'
   },
   module: {
@@ -21,6 +24,12 @@ module.exports = {
       use: ExtractTextPlugin.extract(['css-loader'])
     }]
   },
+  devtool: 'source-map',
+  performance: {
+    maxAssetSize: 400000,
+    maxEntrypointSize: 400000,
+    hints: 'error'
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: `${srcDir}/index.html`
@@ -28,6 +37,9 @@ module.exports = {
     new ExtractTextPlugin({
       filename: 'styles.css',
       allChunks: true
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
     })
   ]
 }
