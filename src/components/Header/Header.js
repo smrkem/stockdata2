@@ -5,7 +5,7 @@ import './header.css'
 const Header = () => (
   <header>
     <div className="container header-container">
-      <h1>Matt Smrke</h1>
+      <h1>Stock News Scraper / Classifier</h1>
       <nav>
         <ul>
         </ul>
