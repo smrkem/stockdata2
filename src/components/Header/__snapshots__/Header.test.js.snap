@@ -9,24 +9,7 @@ exports[`Header should render as expected 1`] = `
       Matt Smrke
     </h1>
     <nav>
-      <ul>
-        <li>
-          <Link
-            replace={false}
-            to="/"
-          >
-            Posts
-          </Link>
-        </li>
-        <li>
-          <Link
-            replace={false}
-            to="/about"
-          >
-            About
-          </Link>
-        </li>
-      </ul>
+      <ul />
     </nav>
   </div>
 </header>

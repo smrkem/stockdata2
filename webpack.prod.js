@@ -8,7 +8,7 @@ module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
     app: './index.js',
-    vendor: ['react', 'react-dom', 'react-router-dom']
+    vendor: ['react', 'react-dom']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

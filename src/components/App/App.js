@@ -1,17 +1,14 @@
 import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 
 import styles from './app.css'
 import Header from '../Header/Header'
-import Routes from '../Routes/Routes'
+import StockNews from '../StockNews/StockNews'
 
 const App = () => (
-  <Router>
-    <div>
-      <Header />
-      <Routes />
-    </div>
-  </Router>
+  <div>
+    <Header />
+    <StockNews />
+  </div>
 )
 
 export default App
