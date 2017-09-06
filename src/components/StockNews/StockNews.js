@@ -17,6 +17,11 @@ class StockNews extends React.Component {
     }
   }
 
+  onPostItems(data) {
+    console.log('Posting items')
+    console.log(data)
+  }
+
   onNewQuery(query) {
     console.log('Setting new state.', query)
     this.setState({
@@ -50,7 +55,12 @@ class StockNews extends React.Component {
     return (
       <div className="container" id="stocknews-container">
         <CompanyNameInput newQuery={(val) => this.onNewQuery(val)} />
-        <Results query={this.state.query} output={this.state.output} timer={this.state.timer}/>
+        <Results
+          query={this.state.query}
+          output={this.state.output}
+          timer={this.state.timer}
+          onPostItems={d => this.onPostItems(d)}
+          />
       </div>
     )
   }

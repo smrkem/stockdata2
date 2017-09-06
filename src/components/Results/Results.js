@@ -8,7 +8,10 @@ const Results = (props) => {
   }
 
   let content = props.output ? props.output.map((item, i) => (
-    <div key={i}>
+    <div
+      data-item={ JSON.stringify(item) }
+      key={i}
+      >
       <p>
         <strong>Date: </strong><span>{ item.published }</span>
         <br />
@@ -25,6 +28,9 @@ const Results = (props) => {
   return (
     <div className="results">
       <h2>{ heading }</h2>
+      <hr />
+      <button>Submit Results</button>
+      <hr />
       <div>{ content }</div>
     </div>
 )}
