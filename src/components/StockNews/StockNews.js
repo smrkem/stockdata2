@@ -20,6 +20,15 @@ class StockNews extends React.Component {
   onPostItems(data) {
     console.log('Posting items')
     console.log(data)
+    fetch(apiUrl + '/stock-news-items', {
+      method: 'post',
+      body: JSON.stringify(data),
+      mode: 'cors'
+    })
+      .then(d => d.json())
+      .then(d => {
+        console.log(d)
+      })
   }
 
   onNewQuery(query) {
@@ -56,7 +65,7 @@ class StockNews extends React.Component {
           query={this.state.query}
           output={this.state.output}
           timer={this.state.timer}
-          onPostItems={d => this.onPostItems(d)}
+          postItems={d => this.onPostItems(d)}
           />
       </div>
     )

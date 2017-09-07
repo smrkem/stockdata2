@@ -1,7 +1,7 @@
 
-PROJECT = webscraper
+PROJECT = src
 VIRTUAL_ENV = venv
-FUNCTION_NAME = webscraper
+FUNCTION_NAME = google_news_scraper
 AWS_REGION = us-east-1
 FUNCTION_HANDLER = lambda_handler
 LAMBDA_ROLE = arn:aws:iam::641007673464:role/service-role/basic_lambda
@@ -9,6 +9,11 @@ LAMBDA_ROLE = arn:aws:iam::641007673464:role/service-role/basic_lambda
 # Default commands
 build: clean_package build_package_tmp copy_python remove_unused zip
 
+deploy: deploy_package clean_package
+
+
+deploy_package:
+	aws lambda update-function-code --zip-file=fileb://package/$(PROJECT).zip --function-name $(FUNCTION_NAME)
 
 clean_package:
 	rm -rf ./package/*

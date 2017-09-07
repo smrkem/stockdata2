@@ -21,7 +21,6 @@ class Results extends React.Component {
   }
 
   onSetItemCategory(item, cat) {
-    console.log('onSetItemCategory', item, cat)
     let index = this.state.items.findIndex(match => match.link == item.link)
     let items = this.state.items
     if (items[index].category == cat) {
@@ -29,12 +28,12 @@ class Results extends React.Component {
     } else {
       items[index].category = cat
     }
-    
+
     this.setState({ items })
   }
 
   onSubmitResults() {
-    console.log('onSubmitResults')
+    this.props.postItems(this.state.items)
   }
 
   render() {
