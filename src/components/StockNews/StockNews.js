@@ -13,7 +13,7 @@ class StockNews extends React.Component {
     this.state = {
       query: "",
       timer: 0,
-      output: []
+      output: false
     }
   }
 
@@ -23,7 +23,7 @@ class StockNews extends React.Component {
   }
 
   onNewQuery(query) {
-    console.log('Setting new state.', query)
+    clearInterval(timer)
     this.setState({
       query: query,
       output: false,
@@ -38,12 +38,9 @@ class StockNews extends React.Component {
     }, 1000)
 
     // query for new data at this point
-    console.log('making fetch')
     fetch(apiUrl + '/stock-news-items?q=' + query, { mode: 'cors' })
       .then(d => d.json())
       .then(d => {
-        console.log(query, d)
-
         clearInterval(timer)
         this.setState({
           output: d

@@ -1,16 +1,40 @@
 import React from 'react'
 import './Results.css'
 
+import ResultItem from '../ResultItem/ResultItem'
+
 class Results extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      'query': props.query,
-      'spam': [],
-      'good': [],
-      'discard': []
+    this.state = { items: false }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.output) {
+      let items = nextProps.output.map(item => {
+        item.category = 'uncategorized'
+        return item
+      })
+      this.setState({items})
     }
+  }
+
+  onSetItemCategory(item, cat) {
+    console.log('onSetItemCategory', item, cat)
+    let index = this.state.items.findIndex(match => match.link == item.link)
+    let items = this.state.items
+    if (items[index].category == cat) {
+      items[index].category = 'uncategorized'
+    } else {
+      items[index].category = cat
+    }
+    
+    this.setState({ items })
+  }
+
+  onSubmitResults() {
+    console.log('onSubmitResults')
   }
 
   render() {
@@ -26,27 +50,17 @@ class Results extends React.Component {
     }
 
     // Showing results for
-    if (this.props.query.length && this.props.output) {
+    if (this.props.query.length && this.state.items) {
       heading = `Results for "${this.props.query}":`
-      let items = this.props.output.map((item, i) => (
-        <div
-          data-item={ JSON.stringify(item) }
+      let items = this.state.items.map((item, i) => (
+        <ResultItem
+          item={item}
           key={i}
-          >
-          <p>
-            <strong>Date: </strong><span>{ item.published }</span>
-            <br />
-            <strong>Link: </strong><span><a href={ item.link } target='_blank'>{ item.link}</a></span>
-          </p>
-          <hr />
-          <div className="post-contents">
-            <h4 className="post-title">{ item.contents.title }</h4>
-            { item.contents.paragraphs.map( (par, i) => <p key={`inner-${i}`}>{ par }</p>) }
-          </div>
-        </div>
+          setItemCategory={(item, cat) => this.onSetItemCategory(item, cat)}
+          />
       ))
       content = <div>
-        <button>Submit Results</button>
+        <button onClick={() => this.onSubmitResults() }>Submit Results</button>
         <hr />
         { items }
       </div>

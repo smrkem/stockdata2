@@ -3,14 +3,11 @@ import './CompanyNameInput.css'
 
 class CompanyNameInput extends React.Component {
   goClick() {
-    console.log('clicked')
-    console.log(this.refs.companyName.value)
     this.props.newQuery(this.refs.companyName.value)
   }
 
   companyNameInputKeyUp(ev) {
     if (ev.key == 'Enter') {
-      console.log("ENTER!!!!")
       this.props.newQuery(this.refs.companyName.value)
     }
   }

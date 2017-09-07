@@ -1,0 +1,39 @@
+.result-item {
+  border-bottom: 5px solid;
+  padding-bottom: 30px;
+  margin-bottom: 80px;
+}
+
+.item-cat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #eee;
+}
+
+.cat-label {
+    font-weight: bold;
+}
+
+.cat-actions button {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.cat-spam .spam-button {
+  background: red;
+}
+.cat-good .good-button {
+  background: green;
+}
+.cat-trash .trash-button {
+  color: white;
+  background: black;
+}
+
+.post-contents.collapsed {
+  max-height: 150px;
+  overflow: hidden;
+  transform: height .3s ease;
+}
