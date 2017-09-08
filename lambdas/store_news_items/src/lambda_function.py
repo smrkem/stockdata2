@@ -1,25 +1,29 @@
 import json
 import boto3
 
+
+s3 = boto3.resource('s3')
+bucket = s3.Bucket('ms-stocknewsitems')
+
+def load_data():
+    obj = bucket.Object('good_posts.json')
+    good_posts = json.loads(obj.get()['Body'].read())
+
+    obj = bucket.Object('spam_posts.json')
+    spam_posts = json.loads(obj.get()['Body'].read())
+
+    obj = bucket.Object('post_urls.json')
+    post_urls = json.loads(obj.get()['Body'].read())
+
+    return good_posts, spam_posts, post_urls
+
+
 def lambda_handler(event, context):
-    s3 = boto3.resource('s3')
+    # Load good_posts, spam_posts and post_urls
+    good_posts, spam_posts, post_urls = load_data()
 
-    obj = s3.Bucket('ms-stocknewsitems').Object('positive.json')
-    body = obj.get()['Body'].read()
-
-    pos_posts = json.loads(body)
-
-    # pos_posts = [
-    #     {
-    #         'title': "Sample Title 1",
-    #         'url': "http://example.com",
-    #         'category': 'pos',
-    #         'body': "The body of the post goes in here, all paragraphs concatenated into a single string."
-    #     }
-    # ]
-    #
     # s3.Bucket('ms-stocknewsitems').put_object(Key='positive.json', Body=json.dumps(pos_posts))
-    #
+
 
     # # Get posted data from fe app
     # print("BODY: {}".format(event['body']))
@@ -28,9 +32,17 @@ def lambda_handler(event, context):
     # # Update the visited_sites index file in s3
     #
 
+
+
+    print("Good Posts: {}".format(len(good_posts)))
+    print("Spam Posts: {}".format(len(spam_posts)))
+    print("Post Urls: {}".format(len(post_urls)))
+
     output = {
-        'message': "Get contents from s3",
-        'posts': posts
+        'message': "Loading data from s3",
+        'good_posts': len(good_posts),
+        'spam_posts': len(spam_posts),
+        'post_urls': len(post_urls)
     }
 
     return {
