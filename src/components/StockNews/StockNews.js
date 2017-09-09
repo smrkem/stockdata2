@@ -13,13 +13,13 @@ class StockNews extends React.Component {
     this.state = {
       query: "",
       timer: 0,
-      output: false
+      output: false,
+      outputQuery: "",
+      postResponse: false
     }
   }
 
   onPostItems(data) {
-    console.log('Posting items')
-    console.log(data)
     fetch(apiUrl + '/stock-news-items', {
       method: 'post',
       body: JSON.stringify(data),
@@ -28,6 +28,7 @@ class StockNews extends React.Component {
       .then(d => d.json())
       .then(d => {
         console.log(d)
+        this.setState({postResponse: d})
       })
   }
 
@@ -35,6 +36,7 @@ class StockNews extends React.Component {
     clearInterval(timer)
     this.setState({
       query: query,
+      outputQuery: false,
       output: false,
       timer: 0
     })
@@ -52,6 +54,8 @@ class StockNews extends React.Component {
       .then(d => {
         clearInterval(timer)
         this.setState({
+          query: "",
+          outputQuery: query,
           output: d
         })
       })
@@ -64,7 +68,9 @@ class StockNews extends React.Component {
         <Results
           query={this.state.query}
           output={this.state.output}
+          outputQuery={this.state.outputQuery}
           timer={this.state.timer}
+          postResponse={this.state.postResponse}
           postItems={d => this.onPostItems(d)}
           />
       </div>

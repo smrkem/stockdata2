@@ -11,7 +11,11 @@ class Results extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.output) {
+    if (nextProps.postResponse) {
+      // items have been submitted
+
+    }
+    else if (nextProps.output) {
       let items = nextProps.output.map(item => {
         item.category = 'uncategorized'
         return item
@@ -58,8 +62,26 @@ class Results extends React.Component {
           setItemCategory={(item, cat) => this.onSetItemCategory(item, cat)}
           />
       ))
-      content = <div>
+
+      let apiInfo = <div className="api-info">
         <button onClick={() => this.onSubmitResults() }>Submit Results</button>
+      </div>
+      if (this.props.postResponse) {
+        let response = this.props.postResponse
+        apiInfo = <div className="api-info">
+          <h3>{ response.message }</h3>
+          <p>
+            <span className="results-label">Total Urls: </span>
+            <span className="results-value">{response.post_urls}</span>
+            <span className="results-label">Spam Posts: </span>
+            <span className="results-value">{response.spam_posts}</span>
+            <span className="results-label">Good Posts: </span>
+            <span className="results-value">{response.good_posts}</span>
+          </p>
+        </div>
+      }
+      content = <div>
+        { apiInfo }
         <hr />
         { items }
       </div>

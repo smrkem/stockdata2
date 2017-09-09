@@ -17,29 +17,55 @@ def load_data():
 
     return good_posts, spam_posts, post_urls
 
+def store_data(good_posts, spam_posts, post_urls):
+    bucket.put_object(
+        Key='good_posts.json',
+        Body=json.dumps(good_posts)
+    )
+    bucket.put_object(
+        Key='spam_posts.json',
+        Body=json.dumps(spam_posts)
+    )
+    bucket.put_object(
+        Key='post_urls.json',
+        Body=json.dumps(post_urls)
+    )
+
+
+def prep_post(post):
+    out_post = {}
+    out_post['label'] = post['category']
+    out_post['published'] = post['published']
+    out_post['url'] = post['link']
+    out_post['title'] = post['contents']['title']
+    out_post['body'] = " ".join(post['contents']['paragraphs'])
+    return out_post
+
 
 def lambda_handler(event, context):
     # Load good_posts, spam_posts and post_urls
     good_posts, spam_posts, post_urls = load_data()
 
-    # s3.Bucket('ms-stocknewsitems').put_object(Key='positive.json', Body=json.dumps(pos_posts))
+    # Process posted data from fe app
+    new_posts = json.loads(event['body'])
+    for post in new_posts:
+        print(post)
+        print("++++++++++++++++")
 
+        cat = post['category']
+        if cat=='good':
+            good_posts.append(prep_post(post))
+        elif cat=='spam':
+            spam_posts.append(prep_post(post))
 
-    # # Get posted data from fe app
-    # print("BODY: {}".format(event['body']))
-    # posts = json.loads(event['body'])
-    # # Store each in s3 bucket
-    # # Update the visited_sites index file in s3
-    #
+        if cat != 'uncategorized':
+            post_urls.append(post['link'])
 
-
-
-    print("Good Posts: {}".format(len(good_posts)))
-    print("Spam Posts: {}".format(len(spam_posts)))
-    print("Post Urls: {}".format(len(post_urls)))
+    # Store date to S3
+    store_data(good_posts, spam_posts, post_urls)
 
     output = {
-        'message': "Loading data from s3",
+        'message': "Stored successfully",
         'good_posts': len(good_posts),
         'spam_posts': len(spam_posts),
         'post_urls': len(post_urls)
@@ -52,11 +78,3 @@ def lambda_handler(event, context):
         },
         'body': json.dumps(output)
     }
-
-if __name__ == '__main__':
-    event = {
-        'queryStringParameters': {
-            'q': 'Biostage'
-        }
-    }
-    lambda_handler(event, None)

@@ -2,3 +2,11 @@
   padding: 1rem;
   background: #eee;
 }
+
+.results-label {
+  font-weight: bold;
+}
+.results-value {
+  font-family: monospace;
+  margin-right: 10px;
+}
