@@ -1,0 +1,23 @@
+{
+  "name": "stockdata2",
+  "version": "1.0.0",
+  "description": "React web app for scraping and labelling news posts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smrkem/stockdata2.git"
+  },
+  "author": "Matt Smrke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/smrkem/stockdata2/issues"
+  },
+  "homepage": "https://github.com/smrkem/stockdata2#readme",
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
