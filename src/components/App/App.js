@@ -1,11 +1,12 @@
 import React from 'react'
 import './App.css'
 import Header from '../Header/Header'
+import StockNews from '../StockNews/StockNews'
 
 const App = () => (
-  <div className="container">
+  <div>
     <Header />
-    <h1>Hello karl...</h1>
+    <StockNews />
   </div>
 )
 

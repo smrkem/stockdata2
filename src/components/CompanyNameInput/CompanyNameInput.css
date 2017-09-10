@@ -1,0 +1,20 @@
+#company-name-input {
+  padding: 2rem;
+  background: #eee;
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#company-name-input button {
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+#company-name-input button:hover {
+  background: green;
+  color: white;
+}
+#company-name-input button:active {
+  background: #034a03;
+}
