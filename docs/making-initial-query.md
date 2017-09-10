@@ -96,3 +96,12 @@ So the StockNews component knows the current state of the 'query' - but it isn't
 
 ### Passing things to Results  
 We can pass the query to the Results component and say, customize the header text, but lets be a little more dynamic. The StockNews component should also know the status of each query, and pass that as well. As always, going to start with a very naive implementation and take it from there.
+
+Here's the commit:  
+- https://github.com/smrkem/stockdata2/commit/7f1f518837a09112f046ce1270889cfc00532aae  
+
+Excellent. We're successfully passing the query along with the status of the api call to the Results component, and responding appropriately.
+
+We can do one more thing before starting on the API itself, and that's handle the situation when the API is down.  
+
+### Calling the API  
