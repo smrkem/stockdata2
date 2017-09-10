@@ -8,7 +8,8 @@ class StockNews extends React.Component {
     this.state = {
       query: false,
       isFetching: false,
-      isShowingResults: false
+      isShowingResults: false,
+      errorState: false
     }
   }
 
@@ -16,21 +17,12 @@ class StockNews extends React.Component {
     this.setState({
       query: query,
       isFetching: false,
-      isShowingResults: false
+      isShowingResults: false,
+      errorState: false
     })
 
     // Fetch results from API
     this.fetchResults(query)
-  }
-
-  fetchResults(query) {
-    console.log('in fetch results with: ' + query)
-    this.setState({isFetching: true})
-    // code to actually fetch the results from the api
-    // for now fake it
-    window.setTimeout(() => {
-      this.setState({ isShowingResults: true })
-    }, 2000)
   }
 
   render() {
@@ -40,6 +32,38 @@ class StockNews extends React.Component {
         <Results {...this.state} />
       </div>
     )
+  }
+
+  fetchResults(query) {
+    this.setState({isFetching: true})
+
+    const apiUrl = 'http://not-valid-api/fj9edk90'
+    fetch(apiUrl, {
+      mode: 'cors'
+    })
+    .then(response => {
+      this.checkRespone(response)
+    })
+    .then(data => {
+      // Pass data to results (make own function)
+      this.setState({
+        isFetching: false,
+        isShowingResults: true
+      })
+    })
+    .catch(err => {
+      this.setState({ errorState: err.toString() })
+    })
+  }
+
+  checkRespone(response) {
+    console.log("got response", response)
+    // check also for response.status == 200
+    if (!response.ok) {
+      console.log("Error...")
+      throw Error("Api fetch failed :(")
+    }
+    return response.json()
   }
 }
 
