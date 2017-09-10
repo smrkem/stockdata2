@@ -18,7 +18,7 @@ class StockNews extends React.Component {
   render() {
     return (
       <div className="container" id="stocknews-container">
-        <CompanyNameInput setQuery={this.onChangeQuery} />
+        <CompanyNameInput setQuery={(q) => this.onChangeQuery(q)} />
         <Results />
       </div>
     )

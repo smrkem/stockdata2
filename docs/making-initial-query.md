@@ -57,4 +57,37 @@ On every user submit, we want to do something with the input's value - so we nee
 - keeping an internal state and using that state on submit  
 - adding a ref to the input and accessing the element on submit  
 
-I'm going to try the ref method and see where that gets me. Either way, it'll mean upgrading the CompanyNameInput to a proper React Component.
+I'm going to try the ref method and see where that gets me. Either way, it'll mean upgrading the CompanyNameInput to a proper React Component.  
+
+Here's the commit:  
+- https://github.com/smrkem/stockdata2/commit/fe3e58e0a8599c3ba90dbc3e11305633f428fc74  
+
+Turns out I ended up not needing to use state or refs after all, thanks again to sticking things in a form. I can probably keep CompanyNameInput hat as a stateless component, but I'll refactor it later when I know more.  :fingers_crossed:  
+
+### Passing things to the StockNews component  
+
+It's time to deal with the  
+```
+// Do something ...  
+```
+
+What we want to do is send that query to the API, and listen for results.  The StockNews component's job is to communicate with the API and pass results down. It'll definitely need it's own state, along with a method for changing it when the user submits a query.
+
+Here's the commit.  
+- https://github.com/smrkem/stockdata2/commit/997c345cb99c2fcdd5841d79e10d4526cdbd335f  
+
+There's still an error though. I'm not 100% yet on where I need to juggle the context to properly use the `this` keyword. Starting with this, i get the foolowing in the console:  
+```
+Doing something with: fdsa
+changing query with: fdsa
+Uncaught TypeError: this.setState is not a function
+```  
+so it's pretty clear that `this` needs to refer to the StockNews component and it isn't.  
+```
+<div className="container" id="stocknews-container">
+-        <CompanyNameInput setQuery={this.onChangeQuery} />
++        <CompanyNameInput setQuery={(q) => this.onChangeQuery(q)} />
+  <Results />
+</div>
+```
+gets us there.
