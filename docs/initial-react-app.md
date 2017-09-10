@@ -1,6 +1,7 @@
 **ToC**
 1. [Local setup (npm and webpack)](https://github.com/smrkem/stockdata2/blob/master/docs/local-setup.md)
 2. [Initial React app and skeleton](https://github.com/smrkem/stockdata2/blob/master/docs/initial-react-app.md)
+3. [Making the initial query]()
 
 ***
 
@@ -17,7 +18,7 @@ An `npm start` later and everything is running fine (with some minor styling iss
 
 ### Basic app skeleton  
 
-The app needs to take a user input and pass that to the API, which will respond with the results for that query. The app then needs to display the results, and offer a UI for labelling each post. Finally, the app needs to make a final POST to the API, sending it all the labelled results as data.  
+The app needs to take a user input and pass that to the API, which will respond with the results for that query. The app then needs to display the results, and offer controls for labelling each post. Lastly, the app needs to make a final POST to the API, sending it all the labelled results as data.  
 
 A component for the user input, and another one to display the results and allow the user to label them seems natural. I'm thinking it will also be a good idea to wrap both of those in a parent component whose main responsibility will be communicating with the API and passing the results down as props.  I'm thinking something like the following:  
 
@@ -35,6 +36,7 @@ Here's the commit that creates the skeleton for the above components (along with
 - https://github.com/smrkem/stockdata2/commit/678be7244cd0aa8d8e4bcc05e9347d5ec5bc645f  
 
 <br>
-( `npm start` and everything is running smooth. It doesn't even look half bad)  
+An `npm start` and everything is running smooth. It doesn't even look half bad...
 
 <br>
+I'll be building this app from the outside-in. That is I'll be adding functionality and features along the way - building the app out along the way. With the CompanyNameInput component in place, it's time to take the user's query and send it to the API.
