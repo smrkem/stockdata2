@@ -24,14 +24,19 @@ class StockNews extends React.Component {
   }
 
   fetchResults(query) {
-    this.setState({isfetching: true})
+    console.log('in fetch results with: ' + query)
+    this.setState({isFetching: true})
     // code to actually fetch the results from the api
+    // for now fake it
+    window.setTimeout(() => {
+      this.setState({ isShowingResults: true })
+    }, 2000)
   }
 
   render() {
     return (
       <div className="container" id="stocknews-container">
-        <CompanyNameInput setQuery={(q) => this.onChangeQuery(q)} />
+        <CompanyNameInput setQuery={(q) => this.onNewQuery(q)} />
         <Results {...this.state} />
       </div>
     )
