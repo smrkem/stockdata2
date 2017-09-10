@@ -105,3 +105,11 @@ Excellent. We're successfully passing the query along with the status of the api
 We can do one more thing before starting on the API itself, and that's handle the situation when the API is down.  
 
 ### Calling the API  
+
+I'll be using the javascript 'Fetch' api to make the Http requests to the API. Fetch returns a promise with a 'response' type object which can be inspected and the data passed on.  
+
+When the API is down, there won't be any response object to check, but we can catch these errors too and set a new state flag to pass to the Results component.
+
+With `apiUrl` set to something obviously invalid, the fetch call errors and the user is shown a (helpful?) error message.
+
+To get that API call working means stepping away from the react app and starting the 'serverless' part of this project!! 
