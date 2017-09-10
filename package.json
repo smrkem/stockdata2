@@ -1,22 +1,37 @@
 {
-  "name": "stockdata2",
+  "name": "react-webpack-boilerplate",
   "version": "1.0.0",
-  "description": "React web app for scraping and labelling news posts",
+  "description": "starting point for react app",
   "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack -p --config=webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smrkem/stockdata2.git"
+    "url": "git+https://github.com/smrkem/react-webpack-boilerplate.git"
   },
-  "author": "Matt Smrke",
+  "author": "matt smrke",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/smrkem/stockdata2/issues"
+    "url": "https://github.com/smrkem/react-webpack-boilerplate/issues"
   },
-  "homepage": "https://github.com/smrkem/stockdata2#readme",
+  "homepage": "https://github.com/smrkem/react-webpack-boilerplate#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "normalize.css": "^7.0.0",
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.7.1"
+  },
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
   }
