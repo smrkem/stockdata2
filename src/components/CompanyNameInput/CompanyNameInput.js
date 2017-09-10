@@ -7,7 +7,7 @@ class CompanyNameInput extends React.Component {
     e.preventDefault()
     let input = e.target.elements[0]
     console.log(`Doing something with: ${input.value}`)
-    // Do something ...
+    this.props.setQuery(input.value)
     input.value = null
   }
 
