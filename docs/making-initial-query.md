@@ -116,4 +116,6 @@ Here is the commit to get there:
 - https://github.com/smrkem/stockdata2/commit/c0d025e21a39a02e23cef45cbf1d4f4ed7fbb45d  
 
 
-To get that API call working means stepping away from the react app and starting the 'serverless' part of this project!!
+I'll leave the code for a successful api call at some useful debugging for now. In particular, I want to make sure that the `checkRespone` function does what it should and errors in a decent way when necessary.
+
+To get that api call working means stepping away from the react app and starting the 'serverless' part of this project!!
