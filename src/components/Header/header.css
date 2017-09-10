@@ -1,0 +1,32 @@
+header {
+  background: linear-gradient(to right, #53384c, #3f1429);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+header h1 {
+  color: #fff;
+  font-size: 3.5rem;
+  text-transform: uppercase;
+}
+
+header nav ul {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+header nav a {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 2rem;
+  margin-left: 2rem;
+}
+
+header nav a:focus,
+header nav a:hover {
+  color: #990066;
+}
