@@ -106,10 +106,14 @@ We can do one more thing before starting on the API itself, and that's handle th
 
 ### Calling the API  
 
-I'll be using the javascript 'Fetch' api to make the Http requests to the API. Fetch returns a promise with a 'response' type object which can be inspected and the data passed on.  
+I'll be using the javascript 'Fetch' api to make the Http requests to our custom API. Fetch returns a promise with a 'response' type object which can be inspected and the data passed on.  
 
 When the API is down, there won't be any response object to check, but we can catch these errors too and set a new state flag to pass to the Results component.
 
 With `apiUrl` set to something obviously invalid, the fetch call errors and the user is shown a (helpful?) error message.
 
-To get that API call working means stepping away from the react app and starting the 'serverless' part of this project!! 
+Here is the commit to get there:  
+- https://github.com/smrkem/stockdata2/commit/c0d025e21a39a02e23cef45cbf1d4f4ed7fbb45d  
+
+
+To get that API call working means stepping away from the react app and starting the 'serverless' part of this project!!
