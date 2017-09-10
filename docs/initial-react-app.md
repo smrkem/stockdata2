@@ -28,3 +28,12 @@ A component for the user input, and another one to display the results and allow
 ```  
 
 I'll start with these initially, creating them as 'stateless' components. I'll end up going back and changing them when needed, but I think it's best to start simple and only add complexity when it's required.  
+
+Here's the commit that creates the skeleton for the above components (along with some styling). The CompanyNameInput is built out somewhat, but Results is just placeholder.  
+<br>
+https://github.com/smrkem/stockdata2/commit/678be7244cd0aa8d8e4bcc05e9347d5ec5bc645f  
+
+<br>
+(`npm start` and everything is running smooth. It doesn't even look half bad)  
+
+<br>
