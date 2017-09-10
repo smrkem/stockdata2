@@ -91,3 +91,8 @@ so it's pretty clear that `this` needs to refer to the StockNews component and i
 </div>
 ```
 gets us there.
+
+So the StockNews component knows the current state of the 'query' - but it isn't currently doing anything with that.  
+
+### Passing things to Results  
+We can pass the query to the Results component and say, customize the header text, but lets be a little more dynamic. The StockNews component should also know the status of each query, and pass that as well. As always, going to start with a very naive implementation and take it from there.
