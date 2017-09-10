@@ -1,30 +1,25 @@
 import React from 'react'
 import './CompanyNameInput.css'
 
-class CompanyNameInput extends React.Component {
+const onFormSubmit = (e, callback) => {
+  e.preventDefault()
+  let input = e.target.elements[0]
+  callback(input.value)
 
-  onFormSubmit(e) {
-    e.preventDefault()
-    let input = e.target.elements[0]
-    this.props.setQuery(input.value)
-    input.value = null
-  }
-
-  render() {
-    return (
-     <div id="company-name-input">
-       <p>Enter the company name to search for:</p>
-       <form
-         onSubmit={(e) => {this.onFormSubmit(e)}}
-       >
-         <p>
-           <input type="text"></input>
-           <button>GO</button>
-         </p>
-       </form>
-     </div>
-   )
-  }
+  input.value = null
 }
 
+const CompanyNameInput = (props) => (
+  <div id="company-name-input">
+   <p>Enter the company name to search for:</p>
+   <form
+     onSubmit={e => onFormSubmit(e, props.setQuery)}
+   >
+     <p>
+       <input type="text"></input>
+       <button>GO</button>
+     </p>
+   </form>
+  </div>
+)
 export default CompanyNameInput

@@ -3,11 +3,11 @@ import './Results.css'
 
 const Results = (props) => {
   if (props.errorState) {
-    console.log(props.errorState)
     return (
       <div id="stocknews-results">
         <h3>API Error :(</h3>
         <div><pre>{ props.errorState }</pre></div>
+        <p>Could not fetch results for { props.query}</p>
       </div>
     )
   }
