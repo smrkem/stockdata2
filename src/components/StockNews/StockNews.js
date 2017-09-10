@@ -6,20 +6,33 @@ class StockNews extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      query: false
+      query: false,
+      isFetching: false,
+      isShowingResults: false
     }
   }
 
-  onChangeQuery(query) {
-    console.log("changing query with: " + query)
-    this.setState({query})
+  onNewQuery(query) {
+    this.setState({
+      query: query,
+      isFetching: false,
+      isShowingResults: false
+    })
+
+    // Fetch results from API
+    this.fetchResults(query)
+  }
+
+  fetchResults(query) {
+    this.setState({isfetching: true})
+    // code to actually fetch the results from the api
   }
 
   render() {
     return (
       <div className="container" id="stocknews-container">
         <CompanyNameInput setQuery={(q) => this.onChangeQuery(q)} />
-        <Results />
+        <Results {...this.state} />
       </div>
     )
   }

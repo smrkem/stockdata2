@@ -6,7 +6,6 @@ class CompanyNameInput extends React.Component {
   onFormSubmit(e) {
     e.preventDefault()
     let input = e.target.elements[0]
-    console.log(`Doing something with: ${input.value}`)
     this.props.setQuery(input.value)
     input.value = null
   }

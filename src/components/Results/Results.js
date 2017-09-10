@@ -1,9 +1,10 @@
 import React from 'react'
 import './Results.css'
 
-const Results = () => (
+const Results = (props) => (
   <div id="stocknews-results">
-    <h3>Results go here!</h3>
+    { console.log(props) }
+    <h3>Results for { props.query }</h3>
   </div>
 )
 export default Results
