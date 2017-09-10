@@ -17,5 +17,5 @@ Here's everything we'll need to build the app:
 The app's job is pretty simple. The user enters a search query, like a company name, and gets back the 10 most recent news posts from Google. Each post can then be manually inspected and flagged as either spam or a legit post. This 'labelled' data then needs to be sent back to the API so it can be stored in s3.  
 
 **ToC**
-1. Local setup (npm and webpack)
+1. [Local setup (npm and webpack)](https://github.com/smrkem/stockdata2/blob/master/docs/local-setup.md)
 2. Initial React app and skeleton
