@@ -104,7 +104,7 @@ $ aws lambda get-function-configuration --function-name google_news_scraper_demo
     "MemorySize": 128,
     "FunctionArn": "arn:aws:lambda:us-east-1:641007673464:function:google_news_scraper_demo",
     "Version": "$LATEST",
-    "Role": "arn:aws:iam::641007673464:role/service-role/google_news_scraper_demo_lambda_role", 
+    "Role": "arn:aws:iam::641007673464:role/service-role/google_news_scraper_demo_lambda_role",
     "Timeout": 40,
     "LastModified": "2017-09-11T21:52:20.983+0000",
     "Handler": "lambda_function.lambda_handler",
@@ -113,4 +113,34 @@ $ aws lambda get-function-configuration --function-name google_news_scraper_demo
 }
 ```  
 
-With that done I need to make the corresponding entry on my local. In my new lambdas folder I create a 'google_news_scraper_demo' folder and go into it. From in there I make a new virtualenv and activate it. Let's start with a little python code to test. The "Handler" for our function is 'lambda_function.lambda_handler' which for us maps to a file called 'lambda_function.py' with a function inside it called 'lambda_handler'.
+With that done I need to make the corresponding entry on my local. In my new lambdas folder I create a 'google_news_scraper_demo' folder and go into it. From in there I make a new virtualenv and activate it. Let's start with a little python code to test. The "Handler" for our function is 'lambda_function.lambda_handler' which for us maps to a file called 'lambda_function.py' with a function inside it called 'lambda_handler'. Let's start with my fallback helloworld:  
+```
+# file: /lambdas/google_news_scraper_demo/lambda_function.py
+
+def lambda_handler(event, context):
+    print(event)
+    print(context)
+    return 'Hello karl'
+```
+
+and that's it. Almost exactly like the default code, except I always like to kick things off with inspecting what I have. We can upload the new version, and then go back to the console to test things out. To do that we first zip it up along with any dependencies (none in this case) and then upload it to aws using the awscli. This feels like a process we'll do a lot so lets add a Makefile.  
+
+Here's the commit with the new Makefile, and a good organization structure for all our future lambdas.  
+- https://github.com/smrkem/stockdata2/commit/4493f2629aa35bec90715a2bf6bcc6907036c1ff  
+and inside the 'lambdas' folder the structure should now look like this:  
+```
+.
+└── google_news_scraper_demo
+    ├── lambda_function.py
+    ├── Makefile
+    ├── package
+    ├── src
+    │   └── lambda_function.py
+    └── venv
+        ..
+        ├── lib
+        ├── lib64 -> lib
+        ..
+```  
+
+On my environment and version of python, the 'lib64' folder in the virtual environment is just a symlink to the 'lib' folder, so in the "copy_python" section of the Makefile I only add the  `$(VIRTUAL_ENV)/lib;` folder. You might want a second if block there if your environment is different.
