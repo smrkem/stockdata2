@@ -64,7 +64,7 @@ Under 'Resources', I go to 'Actions' > 'Create Resource' and I call it 'stocknew
 
 Create it. So far so good. Still no methods defined on it, so a user can't make a request, but to do that we should first create the Lambda and write the code that'll handle the request.  
 
-### The google-news-scraper Lambda  
+## The google-news-scraper Lambda  
 
 AWS Lambda service lets you create functions (we'll be using python) that run in the cloud in response to a trigger. That's it. So good.
 
@@ -75,6 +75,8 @@ So a two-parter really.
 2. for each of the 10 results, go out and scrape for title and copy  
 
 *Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url).*  
+
+### Setup  
 
 My typical workflow for dealing with python lambdas is to set up a local working virtual environment and install any packages my lambda needs in there. If the following commands are new to you, then you want to google python virtual environments before moving on.  
 ```
@@ -146,4 +148,14 @@ and inside the 'lambdas' folder the structure should now look like this:
         ..
 ```  
 
-On my environment and version of python, the 'lib64' folder in the virtual environment is just a symlink to the 'lib' folder, so in the "copy_python" section of the Makefile I only add the  `$(VIRTUAL_ENV)/lib;` folder. You might want a second if block there if your environment is different.
+*Note: On my environment and version of python, the 'lib64' folder in the virtual environment is just a symlink to the 'lib' folder, so in the "copy_python" section of the Makefile I only add the  `$(VIRTUAL_ENV)/lib;` folder. You might want a second if block there if your environment is different.*  
+
+<br>
+
+With this we can write our python code like normal, using pip install whenever we need to add a library, and then just run
+```
+$ make build
+```
+when we're ready to update the function on AWS. We'll get a `src.zip` file in the 'package' directory that's ready for uploading.
+
+After uploading it to my new 'google_news_scraper_demo' function in the console (including some headscratching on weird, failed attempts until I realized the 'lamda_function.py' file was empty from my earier goof - Doh!) I can see the code and it runs the stock AWS test event just fine.  
