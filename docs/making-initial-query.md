@@ -62,7 +62,7 @@ I'm going to try the ref method and see where that gets me. Either way, it'll me
 Here's the commit:  
 - https://github.com/smrkem/stockdata2/commit/fe3e58e0a8599c3ba90dbc3e11305633f428fc74  
 
-Turns out I ended up not needing to use state or refs after all, thanks again to sticking things in a form. I can probably keep CompanyNameInput hat as a stateless component, but I'll refactor it later when I know more.  :fingers_crossed:  
+Turns out I ended up not needing to use state or refs after all, thanks again to sticking things in a form. I can probably keep CompanyNameInput as a stateless component, but I'll refactor it later when I know more.  :fingers_crossed:  
 
 ### Passing things to the StockNews component  
 
