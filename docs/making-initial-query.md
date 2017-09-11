@@ -2,7 +2,7 @@
 1. [Local setup (npm and webpack)](https://github.com/smrkem/stockdata2/blob/master/docs/local-setup.md)
 2. [Initial React app and skeleton](https://github.com/smrkem/stockdata2/blob/master/docs/initial-react-app.md)
 3. [Making the initial query](https://github.com/smrkem/stockdata2/blob/master/docs/making-initial-query.md)
-4. [Building the API and first Lambda]
+4. [Building the API and first Lambda](https://github.com/smrkem/stockdata2/blob/master/docs/building-api-lambda1.md)
 5. [Displaying Results]  
 
 ***  
@@ -106,9 +106,11 @@ We can do one more thing before starting on the API itself, and that's handle th
 
 ### Calling the API  
 
-I'll be using the javascript 'Fetch' api to make the Http requests to our custom API. Fetch returns a promise with a 'response' type object which can be inspected and the data passed on.  
+I'll be using the javascript 'Fetch' api to make the Http requests to our custom API. Fetch is a javascript api that most modern browsers can use. It makes HTTP requests using a simple syntax and returns a promise with a 'response' type object which can be inspected and the data passed on.  
 
 When the API is down, there won't be any response object to check, but we can catch these errors too and set a new state flag to pass to the Results component.
+
+*Note*: *Since we want to call our API from any domain - in particular at this point from 'localhost' - we need to pass a config object when calling the Fetch API with 'mode' set to 'cors' (Cross Origin Resource Sharing)*  
 
 With `apiUrl` set to something obviously invalid, the fetch call errors and the user is shown a (helpful?) error message.
 
