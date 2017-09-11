@@ -64,7 +64,7 @@ Under 'Resources', I go to 'Actions' > 'Create Resource' and I call it 'stocknew
 
 Create it. So far so good. Still no methods defined on it, so a user can't make a request, but to do that we should first create the Lambda and write the code that'll handle the request.  
 
-### Lambda  
+### The google-news-scraper Lambda  
 
 AWS Lambda service lets you create functions (we'll be using python) that run in the cloud in response to a trigger. That's it. So good.
 
@@ -75,3 +75,13 @@ So a two-parter really.
 2. for each of the 10 results, go out and scrape for title and copy  
 
 *Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url).*  
+
+My typical workflow for dealing with python lambdas is to set up a local working virtual environment and install any packages my lambda needs in there. If the following commands are new to you, then you want to google python virtual environments before moving on.  
+```
+$ python3 -m venv venv
+$ . venv/bin/activate
+```  
+
+
+
+When it's time to deploy my code to lambda, I add the packages to my source code and zip it all up ready to be deployed as a package to lambda. We'll also be adding a Makefile to make all this stuff quick and easy.
