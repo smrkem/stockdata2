@@ -10,6 +10,8 @@ The end goal here is to be able to amass labelled data for a text classifier. In
 
 I'm thinking go to the app in a browser and put in a company name. Get back the url, title and relevant copy from each result. I should be able to review each result and click a button marking it as 'spam' or 'good'. Finally I should be able to click a button the stores my newly labelled data to s3.
 
+That's my first user story.  
+
 
 ### Tools and Prerequisites
 Here's everything we'll need to build the app:  

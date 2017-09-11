@@ -54,4 +54,24 @@ For our 2 request endpoints, currently I'm thinking they'll look like this:
 GET apiUrl/stock-news-items?q=QUERY_HERE
 POST apiUrl/stock-news-items
 ```  
-where the POST body is an array of labelled newsitems.
+where the POST body is an array of labelled newsitems. I didn't have to use GETS and POSTS to the same url - but I'm not really dealing with proper 'resources' here and this simple organization seems to make sense for now.  
+
+In the AWS console, I go to API Gateway and create a 'New API'. I'll call mine 'stock-news-classifier-demo', put in a description, and click to create it. The API itself is created, but it doesn't have any endpoints.  
+
+Under 'Resources', I go to 'Actions' > 'Create Resource' and I call it 'stocknews-items'. I'm not going to 'Configure as proxy', but I am definitely going to check 'Enable API Gateway CORS'.
+
+[screenshot]
+
+Create it. So far so good. Still no methods defined on it, so a user can't make a request, but to do that we should first create the Lambda and write the code that'll handle the request.  
+
+### Lambda  
+
+AWS Lambda service lets you create functions (we'll be using python) that run in the cloud in response to a trigger. That's it. So good.
+
+The first lambda we need should take a query, and then return an array of objects. Each object has the url, the title, and the copy for the post.
+
+So a two-parter really.  
+1. query google for the top 10 results
+2. for each of the 10 results, go out and scrape for title and copy  
+
+*Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url).*  
