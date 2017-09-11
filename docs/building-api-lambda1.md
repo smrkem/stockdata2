@@ -129,16 +129,14 @@ The Makefile is taken from Ben Emson's excellent video at
 https://www.youtube.com/watch?v=68teS9nNvPQ&t=314s  
 with a few modifications.
 
-Here's the commit with the new Makefile, and a good organization structure for all our future lambdas.  
+Here's the commit with the new Makefile, and a good organization structure for all our future lambdas.  (I goofed and left a copy of the 'lambda_function.py' file in the google_news_scraper_demo root folder).
 - https://github.com/smrkem/stockdata2/commit/4493f2629aa35bec90715a2bf6bcc6907036c1ff  
 
 and inside the 'lambdas' folder the structure should now look like this:  
 ```
 .
 └── google_news_scraper_demo
-    ├── lambda_function.py
     ├── Makefile
-    ├── package
     ├── src
     │   └── lambda_function.py
     └── venv
