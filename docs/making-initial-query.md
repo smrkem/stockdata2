@@ -119,3 +119,11 @@ Here is the commit to get there:
 I'll leave the code for a successful api call at some useful debugging for now. In particular, I want to make sure that the `checkRespone` function does what it should and errors in a decent way when necessary.
 
 To get that api call working means stepping away from the react app and starting the 'serverless' part of this project!!
+
+### Tidying Up  
+One little detail to clean up. The CompanyNameInput compenent is doing it's job well, and triggers a new query with every submit. This is probably all we'll ever need it to do.  
+
+By redefining everythings as 'const' and passing the callback function to the onSumbit handler, we can revert it back to a stateless component.
+
+Here's the last commit for this section.  
+- https://github.com/smrkem/stockdata2/commit/08d7666a9f48bdb374bc9f9bc8c777540fc7a6ca  
