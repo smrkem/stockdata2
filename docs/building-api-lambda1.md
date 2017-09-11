@@ -82,6 +82,35 @@ $ python3 -m venv venv
 $ . venv/bin/activate
 ```  
 
+When it's time to deploy my code to lambda, I add the packages to my source code and zip it all up ready to be deployed as a package to lambda. We'll also be adding a Makefile to make all this stuff quick and easy. In the codebase, each lambda will live in it's own folder inside the 'lambdas' folder. The folder name should match the name used to create the lambda.
 
+In the console I create a new 'google_news_scraper_demo' lambda, using python 3.6 and the default code. I'm not setting up any triggers for it at this point.  
 
-When it's time to deploy my code to lambda, I add the packages to my source code and zip it all up ready to be deployed as a package to lambda. We'll also be adding a Makefile to make all this stuff quick and easy.
+I leave the Handler as the default 'lambda_function.lambda_handler' and for the role I pick "Create a new role from template". I'll name this new role 'google_news_scraper_demo_lambda_role' and won't attach any policy templates to it yet. With AWS I'm finding it better to start with as few permissions as possible and let the errors along the way dictate what to add.
+
+For this function, since it's doing all that scraping and needs to make url requests, I'm going into 'Advanced Settings' and upping the default Timeout to 40sec. Create.
+
+It takes about 20s to complete, but at the end I've got my shiny new lambda created.  
+
+[screenshot]
+
+and I can do stuff with it from the terminal. To just look at it's current configuration I can  
+```
+$ aws lambda get-function-configuration --function-name google_news_scraper_demo
+{
+    "CodeSha256": "J0qJ6CpItjocU9+PVXDUID6V5s+iswETfQPnubUb/PI=",
+    "FunctionName": "google_news_scraper_demo",
+    "CodeSize": 214,
+    "MemorySize": 128,
+    "FunctionArn": "arn:aws:lambda:us-east-1:641007673464:function:google_news_scraper_demo",
+    "Version": "$LATEST",
+    "Role": "arn:aws:iam::641007673464:role/service-role/google_news_scraper_demo_lambda_role", 
+    "Timeout": 40,
+    "LastModified": "2017-09-11T21:52:20.983+0000",
+    "Handler": "lambda_function.lambda_handler",
+    "Runtime": "python3.6",
+    "Description": "return 10 google results"
+}
+```  
+
+With that done I need to make the corresponding entry on my local. In my new lambdas folder I create a 'google_news_scraper_demo' folder and go into it. From in there I make a new virtualenv and activate it. Let's start with a little python code to test. The "Handler" for our function is 'lambda_function.lambda_handler' which for us maps to a file called 'lambda_function.py' with a function inside it called 'lambda_handler'.
