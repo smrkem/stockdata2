@@ -125,8 +125,13 @@ def lambda_handler(event, context):
 
 and that's it. Almost exactly like the default code, except I always like to kick things off with inspecting what I have. We can upload the new version, and then go back to the console to test things out. To do that we first zip it up along with any dependencies (none in this case) and then upload it to aws using the awscli. This feels like a process we'll do a lot so lets add a Makefile.  
 
+The Makefile is taken from Ben Emson's excellent video at  
+https://www.youtube.com/watch?v=68teS9nNvPQ&t=314s  
+with a few modifications.
+
 Here's the commit with the new Makefile, and a good organization structure for all our future lambdas.  
 - https://github.com/smrkem/stockdata2/commit/4493f2629aa35bec90715a2bf6bcc6907036c1ff  
+
 and inside the 'lambdas' folder the structure should now look like this:  
 ```
 .
