@@ -212,3 +212,11 @@ which runs just fine locally. I build the deployment package and attempt to depl
 (venv) $ make build
 (venv) $ make deploy
 ```  
+
+The output is promising and I go to check it out in the console. Refreshing the screen shows the new code and it runs without any problems. woot!
+
+This workflow, directory structure and even the Makefile will work unaltered for all my lambdas. And now, with the setup out of the way - it's on to the fun stuff of having the google_news_scraper_demo lambda actually do something useful.  
+
+### The GET /stocknews-items request  
+
+First thing I want to do is figure out how to get at the
