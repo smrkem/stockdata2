@@ -11,6 +11,7 @@ class StockNews extends React.Component {
       isShowingResults: false,
       errorState: false
     }
+    this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
   }
 
   onNewQuery(query) {
@@ -37,15 +38,16 @@ class StockNews extends React.Component {
   fetchResults(query) {
     this.setState({isFetching: true})
 
-    const apiUrl = 'http://not-valid-api/fj9edk90'
-    fetch(apiUrl, {
+    let url = this.apiUrl + '/stocknews-items?q=' + query
+    fetch(url, {
       mode: 'cors'
     })
     .then(response => {
       this.checkRespone(response)
+      return response.json()
     })
     .then(data => {
-      // Pass data to results (make own function)
+      console.log(data)
       this.setState({
         isFetching: false,
         isShowingResults: true
@@ -57,13 +59,11 @@ class StockNews extends React.Component {
   }
 
   checkRespone(response) {
-    console.log("got response", response)
     // check also for response.status == 200
     if (!response.ok) {
       console.log("Error...")
       throw Error("Api fetch failed :(")
     }
-    return response.json()
   }
 }
 
