@@ -219,4 +219,73 @@ This workflow, directory structure and even the Makefile will work unaltered for
 
 ### The GET /stocknews-items request  
 
-First thing I want to do is figure out how to get at the
+I can finally hook the lambda up to my API and complete the request from the app. Currently the news_scraper lambda doesn't do anything except print out the event parameter. That seems like a good starting point.
+
+In the 'stock-news-classifier-demo' API, I add a new GET method to the 'stocknews-items' resource and attach it to the lambda.
+
+[screenshot]  
+
+That's it. I can deploy the API (setting up a new stage that I'll name 'dev') and get my endpoit's url.  
+- `https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev`  
+
+I can use this in the app and try sending the query input from the user to my lambda. Here's the diff for the update to the StockNews component in the app:  
+```
+class StockNews extends React.Component {
+       isShowingResults: false,
+       errorState: false
+     }
++    this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
+   }
+
+   onNewQuery(query) {
+@@ -37,8 +38,8 @@ class StockNews extends React.Component {
+   fetchResults(query) {
+     this.setState({isFetching: true})
+
+-    const apiUrl = 'http://not-valid-api/fj9edk90'
+-    fetch(apiUrl, {
++    let url = this.apiUrl + '/stocknews-items?q=' + query
++    fetch(url, {
+       mode: 'cors'
+     })
+     .then(response => {
+```  
+I spin up the app and try it out, putting 'testing' in the box and submitting. It doesn't work and I get an error :(
+```
+No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost:8080' is therefore not allowed access. The response had HTTP status code 502. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.  
+```
+
+Ahh well - at least my error handling code is working alright. kind of. I'm not even getting a 'response' object back. But I can go over the AWS console for my lambda and click on the "Monitoring" tab and see that my lambda is indeed firing. What's more, there are no errors. Heading over to "View logs in CloudWatch" I can see that the function ran properly, and even inspect the `event` object that got passed in. Apparently there's a `queryStringParameters` key in there which is holding the query string. Awesome.
+
+So what's the problem? Well, with the way this API method is set up it actually needs to return a response, which includes the "Access-Control-Allow-Origin" header. Let's update the lambda function
+```
+import json
+
+
+def lambda_handler(event, context):
+    query = event['queryStringParameters']
+    print(query)
+    output = {
+        'message': "Got query: {}".format(query)
+    }
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(output)
+    }
+
+```
+and then build and deploy it.  
+```
+(venv)$ make build
+(venv)$ made deploy
+```
+
+Now the query works and the API is returning a decent response. Here's the full commit (that also fixes up an error in the StockNews component query code):  
+- https://github.com/smrkem/stockdata2/commit/9cea74588fc58e745593d926818ac6e89dd3937e  
+
+I also updated the `lambda_function.py` code with an appropriate sample event for testing the function locally. Now we're successfully sending the query through the API to the lambda, and returning some kind of response to the app. Time to make the function actually useful.
+
+### Querying google for news results  
