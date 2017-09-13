@@ -76,7 +76,7 @@ So a two-parter really.
 
 *Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url).*  
 
-### Setup  
+### Setting up a lambda workflow
 
 My typical workflow for dealing with python lambdas is to set up a local working virtual environment and install any packages my lambda needs in there. If the following commands are new to you, then you want to google python virtual environments before moving on.  
 ```
@@ -159,3 +159,56 @@ $ make build
 when we're ready to update the function on AWS. We'll get a `src.zip` file in the 'package' directory that's ready for uploading.
 
 After uploading it to my new 'google_news_scraper_demo' function in the console (including some headscratching on weird, failed attempts until I realized the 'lamda_function.py' file was empty from my earier goof - Doh!) I can see the code and it runs the stock AWS test event just fine.  
+
+<br>
+
+There's a couple final bits of setup I want to have in place. I want to be able to easily test my lambdas locally as I'm developing (when it makes sense) and I want the Makefile to also handle uploading the code to AWS.  
+
+Running the file locally is easy, just add the boilerplate python to the bottom and invoke the function, remebering to create an event object. (I ditched printing the context after my test in the aws console didn't show anything I cared about).  
+```
+def lambda_handler(event, context):
+    print(event)
+    return 'Hello karl'
+
+if __name__ == "__main__":
+    event = { 'key1': 'value1' }
+    lambda_handler(event, None)
+```  
+and now I can run my lambda locally with:  
+```
+(venv) $ python src/lambda_function.py
+{'key1': 'value1'}
+```  
+This is fine for now. I'll see what hoops I need to jump through as I start doing more things in the lambda.  
+
+Having a make command to upload the file to aws is also easy. We can add:  
+```
+# file: Makefile
+
+...
+
+deploy: deploy_package clean_package
+
+
+deploy_package:
+	aws lambda update-function-code --zip-file=fileb://package/$(PROJECT).zip --function-name $(FUNCTION_NAME)
+
+...
+```
+which, thanks to the way we set up our Makefile will do all this automatically. To check, I make a slight addition the function:
+```
+def lambda_handler(event, context):
+    print(event)
+    print(list(event.keys()))
+    return 'Hello karl'
+
+if __name__ == "__main__":
+    event = { 'key1': 'value1' }
+    lambda_handler(event, None)
+
+```
+which runs just fine locally. I build the deployment package and attempt to deploy it to AWS:
+```
+(venv) $ make build
+(venv) $ make deploy
+```  

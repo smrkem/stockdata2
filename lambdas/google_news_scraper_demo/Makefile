@@ -4,6 +4,12 @@ FUNCTION_NAME = $(shell basename $(CURDIR))
 
 build: clean_package build_package_tmp copy_python remove_unused zip
 
+deploy: deploy_package clean_package
+
+
+deploy_package:
+	aws lambda update-function-code --zip-file=fileb://package/$(PROJECT).zip --function-name $(FUNCTION_NAME)
+
 clean_package:
 	rm -rf ./package/*
 
