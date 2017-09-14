@@ -96,7 +96,7 @@ For this function, since it's doing all that scraping and needs to make url requ
 
 It takes about 20s to complete, but at the end I've got my shiny new lambda created.  
 
-[screenshot]
+![screenshot](https://github.com/smrkem/stockdata2/blob/master/docs/images/lambda-created-1.png)
 
 and I can do stuff with it from the terminal. To just look at it's current configuration I can  
 ```
