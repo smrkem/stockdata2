@@ -66,25 +66,27 @@ Create it. So far so good. Still no methods defined on it, so a user can't make 
 
 ## The google-news-scraper Lambda  
 
-AWS Lambda service lets you create functions (we'll be using python) that run in the cloud in response to a trigger. That's it. So good.
+AWS Lambda service lets you create functions (we'll be using python) that run in the cloud in response to a trigger. That's it. Sooo good.
 
-The first lambda we need should take a query, and then return an array of objects. Each object has the url, the title, and the copy for the post.
+The first lambda we need should take the user's query (the company name they want to search), and then return an array of 10 post objects. Each object has the url, the title, and the copy for the post.
 
 So a two-parter really.  
 1. query google for the top 10 results
 2. for each of the 10 results, go out and scrape for title and copy  
 
-*Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url).*  
+*Note: That's actually raising some red flags and I suspect that there's probably a neat way to make this 2 different lambdas - but I'm also thinking that to keep costs down 1 request has got to be better than 2 (one to query google and another to return all results) or 11 (on to query google and another called 10x to go out and scrape a given url). I'm still experimenting with AWS's pricing models :)*  
+
+We'll be creating a couple lambdas for this project, and a good Lambda workflow seems like something worth spending a little time on up front.
 
 ### Setting up a lambda workflow
 
-My typical workflow for dealing with python lambdas is to set up a local working virtual environment and install any packages my lambda needs in there. If the following commands are new to you, then you want to google python virtual environments before moving on.  
+My current workflow for dealing with python lambdas is to set up a local virtual environment and install any packages my lambda needs in there. If the following commands are new to you, then you want to google "python virtual environments" and do a tutorial before moving on.
 ```
 $ python3 -m venv venv
 $ . venv/bin/activate
 ```  
 
-When it's time to deploy my code to lambda, I add the packages to my source code and zip it all up ready to be deployed as a package to lambda. We'll also be adding a Makefile to make all this stuff quick and easy. In the codebase, each lambda will live in it's own folder inside the 'lambdas' folder. The folder name should match the name used to create the lambda.
+When it's time to deploy my code to lambda, I add the packages to my source code and zip it up, ready to be deployed as a single package to lambda. We'll also be adding a Makefile to make all this stuff quick and easy. In the codebase, each lambda will live in it's own folder inside the 'lambdas' folder. The folder name should match the name used to create the lambda.
 
 In the console I create a new 'google_news_scraper_demo' lambda, using python 3.6 and the default code. I'm not setting up any triggers for it at this point.  
 
