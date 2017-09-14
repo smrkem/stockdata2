@@ -3,7 +3,7 @@
 2. [Initial React app and skeleton](https://github.com/smrkem/stockdata2/blob/master/docs/initial-react-app.md)
 3. [Making the initial query](https://github.com/smrkem/stockdata2/blob/master/docs/making-initial-query.md)
 4. [Building the API and first Lambda](https://github.com/smrkem/stockdata2/blob/master/docs/building-api-lambda1.md)
-5. [Displaying Results]  
+5. [Displaying Results](https://github.com/smrkem/stockdata2/blob/master/docs/displaying-results.md)
 
 ***  
 
@@ -291,3 +291,366 @@ Now the query works and the API is returning a decent response. Here's the full 
 I also updated the `lambda_function.py` code with an appropriate sample event for testing the function locally. Now we're successfully sending the query through the API to the lambda, and returning some kind of response to the app. Time to make the function actually useful.
 
 ### Querying google for news results  
+
+I experimented with a couple different methods of getting search results back from google. The best I found was to query new.google.com for an rss feed.  
+
+For this we'll use the python 'feedparser' library.  
+`(venv)$ pip install feedparser`  
+Make sure you're in the lambda's folder (for me that's "google_news_scraper_demo") and that your virtualenv is activated. This is how we keep track of the python dependencies for each lambda.  
+
+Here's the next version of my lambda function:  
+```
+import json
+import feedparser
+
+
+def lambda_handler(event, context):
+    q = event['queryStringParameters']['q'].replace(' ', '+')
+    print("Query: {}".format(q))
+    url = "http://news.google.com/news?q={}&output=rss".format(q)
+
+    d = feedparser.parse(url)
+
+    out = []
+    print("ITEM COUNT: {}".format(len(d.entries)))
+
+    for item in d.entries:
+        print(type(item))
+        print(item)
+
+
+
+    output = {
+        'message': "Got query: {}".format(q)
+    }
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(output)
+    }
+
+if __name__ == "__main__":
+    event = { 'queryStringParameters': {
+            'q': 'go pro'
+        }
+    }
+    lambda_handler(event, None)
+```
+It does some checking on the user's query to account for spaces, and then crafts the full url that feedparser will grab from google news. I'm starting with some basic debugging output just to see if everythin is working and inspect what I'm getting back.  
+
+I also adjust the mock 'event' object for invoking the function locally so it matches what format I'll get from my API.  
+```
+(venv)$ python src/lambda_function.py
+Query: go+pro
+ITEM COUNT: 10
+<class 'feedparser.FeedParserDict'>
+{'id': 'tag:news.google.com,2005:cluster=https://www.theverge.com/circuitbreaker/2017/9/14/16306260/gopro-hero-6-black-sneak-peek', 'published': 'Thu, 14 Sep 2017 10:25:00 GMT', 'title': 'Is this the new...
+...
+```
+
+The type of each 'item' is a `<class 'feedparser.FeedParserDict'>` and there's 10 of them. Nice. For each item I figure I want to pull out the 'title', 'published' and 'link' properties - unfortunately the 'link' is always a google redirect like
+```
+http://news.google.com/news/url?sa=t&fd=R&ct2=us&usg=AFQjCNGoNtoLrWtnXeJ_Sx7RoxK23g35KA&clid=c3a7d30bb8a4878e06b80cf16b898331&cid=52779606267837&ei=A8e6WaDsEIOJqwL_ooqoDA&url=https://davidsonregister.com/biostage-inc-bstg-ends-recent-session-above-parabolic-sar/220074/
+```
+
+The actual url of the post is buried in there as a 'url' parameter, so I'll use `urlparse` to grab it. I'll pull all this into a 'fetch' function that returns an array of objects.
+```
+import json
+from urllib.parse import urlparse, parse_qs
+import feedparser
+
+def fetch_posts(q):
+    url = "http://news.google.com/news?q={}&output=rss".format(q)
+    d = feedparser.parse(url)
+    out = []
+    for item in d.entries:
+        qs = parse_qs(urlparse(item.link).query)
+        out.append({
+            'title': item.title,
+            'published': item.published,
+            'link': qs['url'][0]
+        })
+    return out
+
+def lambda_handler(event, context):
+    q = event['queryStringParameters']['q'].replace(' ', '+')
+    print("Query: {}".format(q))
+
+    posts = fetch_posts(q)
+    print("ITEM COUNT: {}".format(len(posts)))
+    for post in posts:
+        print(post)
+        print("\n++++++++++++++++++++++++++++++++\n")
+
+
+    output = {
+        'message': "Got query: {}".format(q)
+    }
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(output)
+    }
+
+if __name__ == "__main__":
+    event = { 'queryStringParameters': {
+            'q': 'biostage'
+        }
+    }
+    lambda_handler(event, None)
+```
+The new lambda function runs fine in the terminal and I'm getting back what I hoped for.  
+
+Now I want to grab the copy for each one of these posts. I'm thinking along the lines of an array of strings representing the relevant copy on the page. (I also just want to check to verify for myself that the rss feed 'title' and the web page 'title' are the same.) Beautiful Soup is a python module that's perfect for this.
+```
+(venv)$ pip install bs4
+```  
+
+We can use the standard urllib request to get the url contents and pass that to BeautifulSoup to easily grab the parts I care about. Again - I'll pull that out to it's own function.
+```
+import json
+import urllib.request
+from urllib.parse import urlparse, parse_qs
+import feedparser
+
+def grab_contents(url):
+    out = []
+    req = urllib.request.Request(url)
+    sauce = urllib.request.urlopen(req).read()
+    print(sauce)
+    print("\n\n\n+++++++++++++++++++++++++\n\n\n")
+    return out
+
+def fetch_posts(q):
+    url = "http://news.google.com/news?q={}&output=rss".format(q)
+    d = feedparser.parse(url)
+    out = []
+    for item in d.entries:
+        qs = parse_qs(urlparse(item.link).query)
+        link = qs['url'][0]
+        out.append({
+            'title': item.title,
+            'published': item.published,
+            'link': link,
+            'contents': grab_contents(link)
+        })
+    return out
+
+def lambda_handler(event, context):
+    q = event['queryStringParameters']['q'].replace(' ', '+')
+    print("Query: {}".format(q))
+
+    posts = fetch_posts(q)
+    print("ITEM COUNT: {}".format(len(posts)))
+    for post in posts:
+        print(post)
+        print("\n++++++++++++++++++++++++++++++++\n")
+
+
+    output = {
+        'message': "Got query: {}".format(q)
+    }
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(output)
+    }
+
+if __name__ == "__main__":
+    event = { 'queryStringParameters': {
+            'q': 'biostage'
+        }
+    }
+    lambda_handler(event, None)
+```
+
+Trying it in the terminal, I see some very promising html in the output, but then things fail with a 403 error. Some of the web pages are preventing urllib.request from doing its thing. Not a big problem - I can set a plausible User-Agent header in the request. Other than that things are ready to parse for the parts I care about.  
+
+At first I just want to print out the page title (to compare to the rss title) and maybe also all the headings text.
+```
+import json
+import urllib.request
+from urllib.parse import urlparse, parse_qs
+import feedparser
+import bs4 as bs
+
+def grab_contents(url):
+    out = []
+    req = urllib.request.Request(url, data=None, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+    })
+
+    sauce = urllib.request.urlopen(req).read()
+    soup = bs.BeautifulSoup(sauce, "html.parser")
+    print(soup.title.string)
+    for h_type in ['h1', 'h2', 'h3', 'h4']:
+        for heading in soup.find_all(h_type):
+            out.append(heading.text)
+    print(out)
+    print("\n\n\n+++++++++++++++++++++++++\n\n\n")
+
+    return out
+
+def fetch_posts(q):
+    url = "http://news.google.com/news?q={}&output=rss".format(q)
+    d = feedparser.parse(url)
+    out = []
+    for item in d.entries:
+        qs = parse_qs(urlparse(item.link).query)
+        link = qs['url'][0]
+        print(item.title)
+        print("^^^^^^^^^^^^^^^")
+        out.append({
+            'title': item.title,
+            'published': item.published,
+            'link': link,
+            'contents': grab_contents(link)
+        })
+    return out
+
+
+def lambda_handler(event, context):
+    q = event['queryStringParameters']['q'].replace(' ', '+')
+    print("Query: {}".format(q))
+
+    posts = fetch_posts(q)
+    print("ITEM COUNT: {}".format(len(posts)))
+    for post in posts:
+        print(post)
+        print("\n++++++++++++++++++++++++++++++++\n")
+
+
+    output = {
+        'message': "Got query: {}".format(q)
+    }
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(output)
+    }
+
+if __name__ == "__main__":
+    event = { 'queryStringParameters': {
+            'q': 'biostage'
+        }
+    }
+    lambda_handler(event, None)
+```
+In the terminal I can see the page title is the same as the rss so I can ignore that - and the h1 tag is mainly a duplicate of that too. Makes sense. I'm also seeing that some of the headings are just newline or other characters. And I'll bet that's even worse when it comes to grabbing the paragraphs. I want to set up a method to 'weed out' this kind of junk copy - and I want it to be easy to add obvious junk content in the future.  
+
+The only thing left to do now is add the sanitized content to the post object and return all the posts in the response. Here's the completed (first version) of the google-news-scraper lambda.  
+```
+import json
+import urllib.request
+from urllib.parse import urlparse, parse_qs
+import feedparser
+import bs4 as bs
+import re
+
+
+def sanitize_content(text):
+    bad_patterns = [
+        r"^<!--(.*?)-->$",
+        r"^.*document\.get.*$",
+        r"^.*adsbygoogle.*$",
+    ]
+    regexes = []
+    for pattern in bad_patterns:
+        regexes.append(re.compile(pattern))
+
+    out = text.replace('\n', '')
+    out = out.replace('\r', '')
+    for pattern in regexes:
+        if pattern.match(out):
+            return ""
+    return out
+
+
+def grab_contents(url):
+    out = []
+    req = urllib.request.Request(url, data=None, headers={
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+    })
+
+    sauce = urllib.request.urlopen(req).read()
+    soup = bs.BeautifulSoup(sauce, "html.parser")
+    for h_type in ['h2', 'h3', 'h4']:
+        for heading in soup.find_all(h_type):
+            sanitized = sanitize_content(heading.text)
+            if len(sanitized) > 5:
+                out.append(sanitized)
+
+    for paragraph in soup.find_all('p'):
+        sanitized = sanitize_content(paragraph.text)
+        if len(sanitized) > 20:
+            out.append(sanitized)
+
+    return out
+
+
+def fetch_posts(q):
+    url = "http://news.google.com/news?q={}&output=rss".format(q)
+    d = feedparser.parse(url)
+    out = []
+    for item in d.entries:
+        qs = parse_qs(urlparse(item.link).query)
+        link = qs['url'][0]
+        out.append({
+            'title': item.title,
+            'published': item.published,
+            'link': link,
+            'contents': grab_contents(link)
+        })
+    return out
+
+
+def generate_response(body, status=200):
+    return {
+        'statusCode': status,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(body)
+    }
+
+
+def lambda_handler(event, context):
+    q = event['queryStringParameters']['q'].replace(' ', '+')
+    print("Query: {}".format(q))
+
+    posts = fetch_posts(q)
+    print("ITEM COUNT: {}".format(len(posts)))
+
+    output = {
+        'message': "Got query: {}".format(q),
+        'posts': posts
+    }
+    return generate_response(output)
+
+if __name__ == "__main__":
+    event = { 'queryStringParameters': {
+            'q': 'biostage'
+        }
+    }
+    lambda_handler(event, None)
+```
+
+It runs fine (although it takes a little while) with my test event locally, so I'll upload it and try it out.  
+```
+(venv)$ make build
+(venv)$ make deploy
+```
+
+And with my app running I try out a query.
+
+![screenshot](https://github.com/smrkem/stockdata2/blob/master/docs/images/logging-results-1.png)  
+
+Awesome! The results look really good. Next up is displaying them to the user. That first request also takes a long time to run - so it'll be a good idea to give the user some feedback there.  
