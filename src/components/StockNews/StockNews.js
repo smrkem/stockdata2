@@ -10,7 +10,8 @@ class StockNews extends React.Component {
       isFetching: false,
       isShowingResults: false,
       errorState: false,
-      timer: 0
+      timer: 0,
+      postItems: []
     }
     this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
     this.timer = null
@@ -22,7 +23,8 @@ class StockNews extends React.Component {
       isFetching: false,
       isShowingResults: false,
       errorState: false,
-      timer: 0
+      timer: 0,
+      postItems: []
     })
 
     clearInterval(this.timer)
@@ -55,16 +57,24 @@ class StockNews extends React.Component {
       return response.json()
     })
     .then(data => {
-      console.log(data)
-      clearInterval(this.timer)
-      this.setState({
-        isFetching: false,
-        isShowingResults: true
-      })
+      this.setResults(data)
     })
     .catch(err => {
       clearInterval(this.timer)
       this.setState({ errorState: err.toString() })
+    })
+  }
+
+  setResults(data) {
+    clearInterval(this.timer)
+    let posts = data.posts.map(item => {
+      item.category = 'uncategorized'
+      return item
+    })
+    this.setState({
+      isFetching: false,
+      isShowingResults: true,
+      postItems: posts
     })
   }
 

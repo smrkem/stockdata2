@@ -1,5 +1,6 @@
 import React from 'react'
 import './Results.css'
+import PostItem from '../PostItem/PostItem'
 
 const Results = (props) => {
   if (props.errorState) {
@@ -13,17 +14,22 @@ const Results = (props) => {
   }
 
   let heading = "No query"
+  let contents = ""
   if (props.query && props.isFetching) {
     heading = `Fetching results for ${props.query} ... ${props.timer}s`
   }
   if (props.query && props.isShowingResults) {
     heading = `Showing results for ${props.query}`
+    contents = props.postItems.map(
+      (item, i) => <PostItem key={i} {...item} />
+    )
   }
 
 
   return (
     <div id="stocknews-results">
       <h3>{ heading }</h3>
+      <div>{ contents }</div>
     </div>
   )
 }
