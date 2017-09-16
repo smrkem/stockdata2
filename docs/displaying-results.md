@@ -42,4 +42,7 @@ I start with a basic PostItem skeleton that just displays the published date and
 
 That's working nicely - time to add the actual contents and some buttons to label each post.
 
-Since each post is likely to be quite long - I think I'll show the full thing while it's uncategorized, but collapse it after it's been labelled to get it out of the way.
+Since each post is likely to be quite long - I think I'll show the full thing while it's uncategorized, but collapse it after it's been labelled to get it out of the way.  
+- https://github.com/smrkem/stockdata2/commit/a890f30d11232e498b3c71d20cdee1a69c8659df  
+
+I added a bit of css and I'm happy with how everything is looking. Now I need to wire up those buttons so they actually categorize the post, and that means sending some functionality down from the StockNews component. I'll also add a bit of color for user feedback.  
