@@ -30,4 +30,16 @@ Before that there's a little cleanup I want to take care of. That first request 
 
 I'm thinking to set up a timer to display to the user while the request is happening. Here's the commit:  
 - https://github.com/smrkem/stockdata2/commit/e95e3c64c7d2ef32dc87de641870fe5787e2a581  
-That feels a whole lot better. A few test queries all complete under or around 20sec - so I'm not going to worry at this point about handling things when the request goes longer than that 40sec timeout.  
+
+That feels a whole lot better. A few test queries all complete under or around 20sec - so I'm not going to worry at this point about handling things when the request goes longer than that 40sec timeout.
+
+### Displaying result posts  
+
+When the results come back, I want to set each one to 'uncategorized' and then set them in the state. I also want to be sending them to the Results component as a new prop, and display each in a new PostItem component.
+
+I start with a basic PostItem skeleton that just displays the published date and the link, along with logging out the props.  
+- https://github.com/smrkem/stockdata2/commit/cb97aeee7b6f979b6eb3113ca48e3596c2a799e4  
+
+That's working nicely - time to add the actual contents and some buttons to label each post.
+
+Since each post is likely to be quite long - I think I'll show the full thing while it's uncategorized, but collapse it after it's been labelled to get it out of the way.
