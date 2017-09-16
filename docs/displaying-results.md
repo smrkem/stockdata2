@@ -42,7 +42,34 @@ I start with a basic PostItem skeleton that just displays the published date and
 
 That's working nicely - time to add the actual contents and some buttons to label each post.
 
-Since each post is likely to be quite long - I think I'll show the full thing while it's uncategorized, but collapse it after it's been labelled to get it out of the way.  
+Since each post is likely to be quite long - I think I'll show the full thing while it's uncategorized, but collapse it after it's been labelled to get it out of the way by setting a class of 'collapsed' on the 'post-contents' div if the category is anything other than 'uncategorized'.  
 - https://github.com/smrkem/stockdata2/commit/a890f30d11232e498b3c71d20cdee1a69c8659df  
 
-I added a bit of css and I'm happy with how everything is looking. Now I need to wire up those buttons so they actually categorize the post, and that means sending some functionality down from the StockNews component. I'll also add a bit of color for user feedback.  
+I added a bit of css and I'm happy with how everything is looking. Now I need to wire up those buttons so they actually categorize the post, and that means sending some functionality down from the StockNews component. I'll also add a bit of color for user feedback by using the post category as a css class on the 'item-cat' div.  
+
+To accomplish setting the category for a post, I'll add a function to the StockNews component that takes a unique identifier for the post in question (in the case the link) and the new category to set.  
+```
+# file: StockNews.js
+
+  onSetPostCategory(link, cat) {
+    let index = this.state.postItems.findIndex(match => match.link == link)
+    let postItems = this.state.postItems
+    if (postItems[index].category == cat) {
+      postItems[index].category = 'uncategorized'
+    }
+    else {
+      postItems[index].category = cat
+    }
+
+    this.setState({ postItems })
+  }
+```  
+
+There. First we grab the index of the post in question from the current state using that link. If the category is already that of what we're sending in (we clicked the "SPAM" button when it was already labelled as spam) then I'll set it back to 'uncategorized' so it can be displayed in full and relabelled. If not, set it to the new category.  
+
+Now I can send that function down as a prop to the PostItem component so it can get used. Here's the full commit:
+- https://github.com/smrkem/stockdata2/commit/b80001edd53910fee26587ba87c8fc3d1a291f4c  
+
+and that gets us there. We're displaying our results in a way that's nice for the user, and presenting controls so each post can be labelled appropriately.  
+
+Next up is sending the results back to the API for storage.
