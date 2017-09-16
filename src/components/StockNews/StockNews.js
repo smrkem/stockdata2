@@ -9,9 +9,11 @@ class StockNews extends React.Component {
       query: false,
       isFetching: false,
       isShowingResults: false,
-      errorState: false
+      errorState: false,
+      timer: 0
     }
     this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
+    this.timer = null
   }
 
   onNewQuery(query) {
@@ -19,8 +21,14 @@ class StockNews extends React.Component {
       query: query,
       isFetching: false,
       isShowingResults: false,
-      errorState: false
+      errorState: false,
+      timer: 0
     })
+
+    clearInterval(this.timer)
+    this.timer = setInterval(() => {
+      this.setState({timer: this.state.timer + 1})
+    }, 1000)
 
     // Fetch results from API
     this.fetchResults(query)
@@ -48,12 +56,14 @@ class StockNews extends React.Component {
     })
     .then(data => {
       console.log(data)
+      clearInterval(this.timer)
       this.setState({
         isFetching: false,
         isShowingResults: true
       })
     })
     .catch(err => {
+      clearInterval(this.timer)
       this.setState({ errorState: err.toString() })
     })
   }

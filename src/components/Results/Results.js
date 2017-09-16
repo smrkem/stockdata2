@@ -14,7 +14,7 @@ const Results = (props) => {
 
   let heading = "No query"
   if (props.query && props.isFetching) {
-    heading = `Fetching results for ${props.query} ...`
+    heading = `Fetching results for ${props.query} ... ${props.timer}s`
   }
   if (props.query && props.isShowingResults) {
     heading = `Showing results for ${props.query}`
