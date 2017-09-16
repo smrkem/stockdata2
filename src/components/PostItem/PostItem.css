@@ -20,6 +20,16 @@
   margin-left: 5px;
   cursor: pointer;
 }
+.cat-spam .spam-button {
+  background: red;
+}
+.cat-good .good-button {
+  background: green;
+}
+.cat-trash .trash-button {
+  color: white;
+  background: black;
+}
 
 .post-contents {
   padding: 1rem;

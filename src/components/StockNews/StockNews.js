@@ -17,6 +17,19 @@ class StockNews extends React.Component {
     this.timer = null
   }
 
+  onSetPostCategory(link, cat) {
+    let index = this.state.postItems.findIndex(match => match.link == link)
+    let postItems = this.state.postItems
+    if (postItems[index].category == cat) {
+      postItems[index].category = 'uncategorized'
+    }
+    else {
+      postItems[index].category = cat
+    }
+
+    this.setState({ postItems })
+  }
+
   onNewQuery(query) {
     this.setState({
       query: query,
@@ -40,7 +53,10 @@ class StockNews extends React.Component {
     return (
       <div className="container" id="stocknews-container">
         <CompanyNameInput setQuery={(q) => this.onNewQuery(q)} />
-        <Results {...this.state} />
+        <Results
+          {...this.state}
+          setPostCategory={(link, cat) => this.onSetPostCategory(link, cat)}
+        />
       </div>
     )
   }

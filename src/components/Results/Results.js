@@ -21,7 +21,7 @@ const Results = (props) => {
   if (props.query && props.isShowingResults) {
     heading = `Showing results for ${props.query}`
     contents = props.postItems.map(
-      (item, i) => <PostItem key={i} {...item} />
+      (item, i) => <PostItem key={i} {...item} setPostCategory={props.setPostCategory} />
     )
   }
 

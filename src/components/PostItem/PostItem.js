@@ -2,7 +2,6 @@ import React from 'react'
 import './PostItem.css'
 
 const PostItem = (props) => {
-  console.log("postItem:", props)
   return(
     <div className="post-item">
       <p>
@@ -18,13 +17,16 @@ const PostItem = (props) => {
       <div className={ `item-cat cat-${props.category}` }>
         <div className="cat-label">{ props.category }</div>
         <div className="cat-actions">
-          <button className="spam-button" >
+          <button className="spam-button"
+            onClick={() => props.setPostCategory(props.link, "spam") }>
               SPAM
           </button>
-          <button className="good-button" >
+          <button className="good-button"
+            onClick={() => props.setPostCategory(props.link, "good") }>
               GOOD
           </button>
-          <button className="trash-button" >
+          <button className="trash-button"
+            onClick={() => props.setPostCategory(props.link, "trash") }>
               DISCARD
           </button>
         </div>
