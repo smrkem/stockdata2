@@ -8,19 +8,5 @@
 
 ***  
 
-# Local Setup (npm and webpack)  
-
-We'll be using npm and webpack to build the project. I'm not going to go into any depth on these topics - there's plenty of documentation. I've set up a boilerplate webpack project for react that has things configured the way I like.  
-
-<br>
-https://github.com/smrkem/react-webpack-boilerplate  
-<br>
-<br>
-
-Just clone or download the repo and npm install the dependencies. The boilerplate app can be built and started with:  
-- `$ npm start`  
-
-and a production build (for live deployments) can be created with:  
-- `$ npm run build`  
-
-The generated 'dist' folder can be directly uploaded to an s3 bucket or anywhere else to host the app.  
+# Sending Back Results  
+  
