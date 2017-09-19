@@ -61,7 +61,7 @@ In the AWS console, I go to API Gateway and create a 'New API'. I'll call mine '
 
 Under 'Resources', I go to 'Actions' > 'Create Resource' and I call it 'stocknews-items'. I'm not going to 'Configure as proxy', but I am definitely going to check 'Enable API Gateway CORS'.
 
-[screenshot]
+![screenshot](https://s3.amazonaws.com/ms-postassets/2017-09-20-Stock-News-Classifier-P1/api-new-resource.png)  
 
 Create it. So far so good. Still no methods defined on it, so a user can't make a request, but to do that we should first create the Lambda and write the code that'll handle the request.  
 
