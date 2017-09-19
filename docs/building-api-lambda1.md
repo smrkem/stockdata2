@@ -226,8 +226,6 @@ I can finally hook the lambda up to my API and complete the request from the app
 
 In the 'stock-news-classifier-demo' API, I add a new GET method to the 'stocknews-items' resource and attach it to the lambda.
 
-![screenshot](https://s3.amazonaws.com/ms-postassets/2017-09-20-Stock-News-Classifier-P1/api-new-resource.png)  
-
 That's it. I can deploy the API (setting up a new stage that I'll name 'dev') and get my endpoit's url.  
 - `https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev`  
 
