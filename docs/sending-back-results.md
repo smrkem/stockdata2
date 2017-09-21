@@ -82,3 +82,9 @@ And I get back some decent info. Now my Makefile commands should just work and I
 
 ***
 ### Adding the POST method to the API  
+
+In API Gateway, I add a new POST method to my stocknews-items api.  
+
+![screenshot](https://s3.amazonaws.com/ms-postassets/2017-09-20-Stock-News-Classifier-P1/api-create-post-stocknews-items.png)  
+
+and that's it! My app should be able to send a request to it. woot!  
