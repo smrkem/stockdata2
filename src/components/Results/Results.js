@@ -2,6 +2,14 @@ import React from 'react'
 import './Results.css'
 import PostItem from '../PostItem/PostItem'
 
+const SubmitControls = ({onPostItems}) => (
+    <div className="submit-controls">
+      <button onClick={onPostItems}>
+          Submit Results
+      </button>
+    </div>
+)
+
 const Results = (props) => {
   if (props.errorState) {
     return (
@@ -15,6 +23,8 @@ const Results = (props) => {
 
   let heading = "No query"
   let contents = ""
+  let submitControls = ""
+
   if (props.query && props.isFetching) {
     heading = `Fetching results for ${props.query} ... ${props.timer}s`
   }
@@ -23,13 +33,16 @@ const Results = (props) => {
     contents = props.postItems.map(
       (item, i) => <PostItem key={i} {...item} setPostCategory={props.setPostCategory} />
     )
+    submitControls = <SubmitControls onPostItems={props.onPostItems} />
   }
 
 
   return (
     <div id="stocknews-results">
       <h3>{ heading }</h3>
+      { submitControls }
       <div>{ contents }</div>
+      { submitControls }
     </div>
   )
 }

@@ -49,6 +49,18 @@ class StockNews extends React.Component {
     this.fetchResults(query)
   }
 
+  onPostItems(data) {
+    fetch(this.apiUrl + '/stocknews-items', {
+      method: 'post',
+      body: JSON.stringify(this.state.postItems),
+      mode: 'cors'
+    })
+      .then(d => d.json())
+      .then(d => {
+        console.log('got response', d)
+      })
+  }
+
   render() {
     return (
       <div className="container" id="stocknews-container">
@@ -56,6 +68,7 @@ class StockNews extends React.Component {
         <Results
           {...this.state}
           setPostCategory={(link, cat) => this.onSetPostCategory(link, cat)}
+          onPostItems={(posts) => this.onPostItems(posts)}
         />
       </div>
     )
