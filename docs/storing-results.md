@@ -157,5 +157,11 @@ In the AWS Console, in IAM I can see all my roles. I click on the 'google_news_s
 
 ![screenshot](https://s3.amazonaws.com/ms-postassets/2017-09-20-Stock-News-Classifier-P1/lambda_role_addS3policy.png)  
 
+Now when I retest my stocknews_meta lambda it finishes successfully and the new stocknews.meta.json file is there in my 'ms-stockknewsitems-demo' bucket. Just to be sure I download it and look at the contents:
+```
+{"current_good_posts": 0, "current_spam_posts": 0, "url_history": []}
+```
+yay! :)
+
 ### Displaying meta data in the app  
 The app should be able to get the updated meta info and display it to the user. That sounds simple enough.
