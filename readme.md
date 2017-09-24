@@ -32,4 +32,8 @@ The app's job is pretty simple. The user enters a search query, like a company n
 3. [Making the initial query](https://github.com/smrkem/stockdata2/blob/master/docs/making-initial-query.md)
 4. [Building the API and first Lambda](https://github.com/smrkem/stockdata2/blob/master/docs/building-api-lambda1.md)
 5. [Displaying Results](https://github.com/smrkem/stockdata2/blob/master/docs/displaying-results.md)
-6. [Sending Results Back for Storage](https://github.com/smrkem/stockdata2/blob/master/docs/sending-back-results.md)  
+6. [Sending Results Back for Storage](https://github.com/smrkem/stockdata2/blob/master/docs/sending-back-results.md)
+7. [Storing the Data](https://github.com/smrkem/stockdata2/blob/master/docs/storing-results.md)  
+8. [Finishing Up](https://github.com/smrkem/stockdata2/blob/master/docs/finishing-up.md)  
+
+***  
