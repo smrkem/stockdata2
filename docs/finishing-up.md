@@ -90,3 +90,41 @@ output = {
 return generate_response(output)
 ```
 and do the `make build` and `make deploy` for each.
+
+Things look good in the app's console, and I'm getting
+```
+meta: {current_good_posts: 5, current_spam_posts: 12, total_urls: 20}
+```
+back with the query.
+
+In the app I'll add a new component CurrentMeta:
+```
+import React from 'react'
+import './CurrentMeta.css'
+
+const CurrentMeta = ({meta}) => (
+    <div className="current-meta">
+      <div>
+        <strong>Current Good:</strong>
+        <span>{ meta.current_good_posts }</span>
+      </div>
+      <div>
+        <strong>Current Spam:</strong>
+        <span>{ meta.current_spam_posts }</span>
+      </div>
+      <div>
+        <strong>Total Urls:</strong>
+        <span>{ meta.total_urls }</span>
+      </div>
+    </div>
+)
+
+export default CurrentMeta
+```
+
+which I'll import and use in the StockNews component. I add a new property `meta` to the state, initialize it with 'x's and make sure to update it whenever I get a response.
+
+Here's the diff:
+- https://github.com/smrkem/stockdata2/commit/90a4ee27901cfa46f17ba212a810bb458d849c54  
+
+That's it. Done!
