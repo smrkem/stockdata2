@@ -16,8 +16,32 @@ Things are basically done. I can search for a company and label the most recent 
 
 At this point, I could use my app for about a week - approximately 100 queries - and I should end up with about 1000 samples. I'm not sure yet what ratio of good to spam would be ideal - so at first imma go for 500 spam and 500 good posts.
 
-I'm noticing some details that really need to be improved:
+I still need to add in the url history to the news scraper and I'm noticing some other details that really need to be improved:
 - occasionally queries fail due to timeout or some weird response from one of the scraped sites. Some better error-checking and feedback here would be helpful.
-- a lot of garbage copy is still getting into my results, the filtering needs to be more accurate.
+- a lot of garbage copy is still getting into my results and some requests aren't getting any relevant copy - the filtering needs to be more accurate.
 - i still definitely want to keep an eye on lambda metrics like lambda memory usage and data filesizes.
-- Some front-end reporting on the meta: url_count, current_good_posts, current_spam_posts
+- Some front-end reporting on the meta: url_count, current_good_posts, current_spam_posts. I'll add another endpoint to the api and update the app.
+
+All the above I'm going to leave for future posts - I'm anxious to move on the data prepping and handling part of this project.
+
+### Accounting for Previously Scraped Urls
+
+My current `stocknews.meta.json` looks like:
+```
+$ aws s3 cp s3://ms-stockknewsitems-demo/stocknews.meta.json .
+download: s3://ms-stockknewsitems-demo/stocknews.meta.json to ./stocknews.meta.json
+$ cat stocknews.meta.json
+{"current_good_posts": 5, "current_spam_posts": 12, "url_history": ["https://ledgergazette.com/2017/09/24/analyzing-dynatronics-corporation-dynt-and-neovasc-nvcn.html", ... , "http://www.massdevice.com/neovasc-shares-rise-tiara-transcath-mitral-valve-trial-update/","]}
+```
+
+so in my lambda_handler's `fetch_posts` method I want to do something like
+```
+if post link not in previous_urls:
+  # scrape the url for the post
+  # append the post to returned results
+```
+
+That's easy enough. I import `boto3` and set up my `bucket` object like before, add a method to read and return the meta and wrap it up by returning the meta in the response to the app.  
+
+Here's the diff:  
+- https://github.com/smrkem/stockdata2/commit/7e9e5b3643e72ecec7c734c297824de75908dfaf  
