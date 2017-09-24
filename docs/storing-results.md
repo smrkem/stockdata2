@@ -183,7 +183,4 @@ $ aws s3 ls s3://ms-stockknewsitems-demo
 awwww yeah!
 
 
-
-
-### Displaying meta data in the app  
-The app should be able to get the updated meta info and display it to the user. That sounds simple enough.
+Next up is adjusting the google_news_scraper_demo lambda to look at the url history and skip any duplicate urls.
