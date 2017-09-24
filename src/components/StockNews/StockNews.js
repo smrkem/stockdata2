@@ -95,6 +95,7 @@ class StockNews extends React.Component {
   }
 
   setResults(data) {
+    console.log(data)
     clearInterval(this.timer)
     let posts = data.posts.map(item => {
       item.category = 'uncategorized'

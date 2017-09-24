@@ -94,7 +94,7 @@ def lambda_handler(event, context):
 
     output = {
         'message': "Got query: {}".format(q),
-        'meta': meta
+        'meta': meta,
         'posts': posts
     }
     return generate_response(output)

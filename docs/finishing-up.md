@@ -45,3 +45,23 @@ That's easy enough. I import `boto3` and set up my `bucket` object like before, 
 
 Here's the diff:  
 - https://github.com/smrkem/stockdata2/commit/7e9e5b3643e72ecec7c734c297824de75908dfaf  
+```
+$ make build
+$ make deploy
+```
+
+In the app's StockNews component I add to the `setResults` method a quick:
+```
+setResults(data) {
+  console.log(data)
+  ...
+```
+and try out that "neovasc" query again.
+
+D'oh! The api returns an error from the lambda. I forgot to add a comma when adding the `meta` to the response :(
+```
+$ make build
+$ make deploy
+```
+
+Let me try that again. The response comes so quick I thought there was another error, but it's actually because everything is working perfectly and there was only a single valid result. Sweet. The meta data looks good in the console - so I'll finally start displaying it in the app.
