@@ -65,3 +65,28 @@ $ make deploy
 ```
 
 Let me try that again. The response comes so quick I thought there was another error, but it's actually because everything is working perfectly and there was only a single valid result. Sweet. The meta data looks good in the console - so I'll finally start displaying it in the app.
+
+### Displaying meta in the app  
+When I'm using the app, I want to be able to see at a glance:
+- current number of good posts stored
+- current number of spam posts stored
+- total number of urls I've scraped so far
+
+That last one will give me a good sense of how many posts scraped in this way are actually useful (if good_posts + spam_posts == total_urls then 100% are kept).
+
+Both the lambdas should include this in their responses, so first I want to make sure they're consistent.
+
+In both the google_news_scraper_demo and store_news_items_demo lambda handlers I update the output to include the meta:
+```
+output = {
+    ...
+    meta: {
+        'current_good_posts': meta['current_good_posts'],
+        'current_spam_posts': meta['current_spam_posts'],
+        'total_urls': len(meta['url_history'])
+    }
+    ...
+}
+return generate_response(output)
+```
+and do the `make build` and `make deploy` for each.

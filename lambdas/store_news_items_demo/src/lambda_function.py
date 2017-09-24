@@ -60,8 +60,10 @@ def lambda_handler(event, context):
 
     output = {
         'message': "Labelled some posts",
-        'good_posts': meta['current_good_posts'],
-        'spam_posts': meta['current_spam_posts'],
-        'post_urls': len(meta['url_history'])
+        'meta': {
+            'current_good_posts': meta['current_good_posts'],
+            'current_spam_posts': meta['current_spam_posts'],
+            'total_urls': len(meta['url_history'])
+        }
     }
     return generate_response(output)
