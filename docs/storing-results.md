@@ -6,7 +6,7 @@
 5. [Displaying Results](https://github.com/smrkem/stockdata2/blob/master/docs/displaying-results.md)
 6. [Sending Results Back for Storage](https://github.com/smrkem/stockdata2/blob/master/docs/sending-back-results.md)
 7. [Storing the Data](https://github.com/smrkem/stockdata2/blob/master/docs/storing-results.md)  
-
+8. [Finishing Up](https://github.com/smrkem/stockdata2/blob/master/docs/finishing-up.md)  
 
 ***  
 
