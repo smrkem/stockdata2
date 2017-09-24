@@ -1,6 +1,7 @@
 import React from 'react'
 import Results from '../Results/Results'
 import CompanyNameInput from '../CompanyNameInput/CompanyNameInput'
+import CurrentMeta from '../CurrentMeta/CurrentMeta'
 
 class StockNews extends React.Component {
   constructor(props) {
@@ -11,7 +12,12 @@ class StockNews extends React.Component {
       isShowingResults: false,
       errorState: false,
       timer: 0,
-      postItems: []
+      postItems: [],
+      meta: {
+        current_good_posts: 'x',
+        current_spam_posts: 'x',
+        total_urls: 'x'
+      }
     }
     this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
     this.timer = null
@@ -58,6 +64,9 @@ class StockNews extends React.Component {
       .then(d => d.json())
       .then(d => {
         console.log('got response', d)
+        this.setState({
+          meta: d.meta
+        })
       })
   }
 
@@ -65,6 +74,7 @@ class StockNews extends React.Component {
     return (
       <div className="container" id="stocknews-container">
         <CompanyNameInput setQuery={(q) => this.onNewQuery(q)} />
+        <CurrentMeta meta={this.state.meta} />
         <Results
           {...this.state}
           setPostCategory={(link, cat) => this.onSetPostCategory(link, cat)}
@@ -104,7 +114,8 @@ class StockNews extends React.Component {
     this.setState({
       isFetching: false,
       isShowingResults: true,
-      postItems: posts
+      postItems: posts,
+      meta: data.meta
     })
   }
 

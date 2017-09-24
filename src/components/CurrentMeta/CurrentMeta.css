@@ -1,0 +1,6 @@
+.current-meta {
+  display: flex;
+  justify-content: space-around;
+  font-family: monospace;
+  padding: 2rem 0 0;
+}
