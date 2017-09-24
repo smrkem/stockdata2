@@ -4,6 +4,11 @@ from urllib.parse import urlparse, parse_qs
 import feedparser
 import bs4 as bs
 import re
+import boto3
+
+
+s3 = boto3.resource('s3')
+bucket = s3.Bucket('ms-stockknewsitems-demo')
 
 
 def sanitize_content(text):
@@ -46,19 +51,20 @@ def grab_contents(url):
     return out
 
 
-def fetch_posts(q):
+def fetch_posts(q, previous_urls):
     url = "http://news.google.com/news?q={}&output=rss".format(q)
     d = feedparser.parse(url)
     out = []
     for item in d.entries:
         qs = parse_qs(urlparse(item.link).query)
         link = qs['url'][0]
-        out.append({
-            'title': item.title,
-            'published': item.published,
-            'link': link,
-            'contents': grab_contents(link)
-        })
+        if link not in previous_urls:
+            out.append({
+                'title': item.title,
+                'published': item.published,
+                'link': link,
+                'contents': grab_contents(link)
+            })
     return out
 
 
@@ -72,15 +78,23 @@ def generate_response(body, status=200):
     }
 
 
+def get_meta():
+    obj = bucket.Object('stocknews.meta.json')
+    meta = json.loads(obj.get()['Body'].read())
+    return meta
+
+
 def lambda_handler(event, context):
     q = event['queryStringParameters']['q'].replace(' ', '+')
     print("Query: {}".format(q))
 
-    posts = fetch_posts(q)
+    meta = get_meta()
+    posts = fetch_posts(q, meta['url_history'])
     print("ITEM COUNT: {}".format(len(posts)))
 
     output = {
         'message': "Got query: {}".format(q),
+        'meta': meta
         'posts': posts
     }
     return generate_response(output)
