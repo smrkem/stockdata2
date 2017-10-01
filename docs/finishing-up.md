@@ -128,3 +128,44 @@ Here's the diff:
 - https://github.com/smrkem/stockdata2/commit/90a4ee27901cfa46f17ba212a810bb458d849c54  
 
 That's it. Done!
+
+### Some more details
+A couple quick improvements.
+- Better error handling in the scraper lambda so it doesn't choke on a single failed result.  
+- Some minor ux like repeating the post category controls at the bottom of each post and updating the display on successful submit of post items  
+
+Here's the diff:  
+- https://github.com/smrkem/stockdata2/commit/e6b582393ac8241befaa869da870e7cea5e9dd42  
+
+
+And I can't call this done until I add in some kind of authentication. I don't want anyone else using my API - potentially adding tons of useless data which gets expensive to store.
+
+I'm going to implement a very basic API Key solution, where the user inputs the secret key on the front end. I'm nervous about this since I never see this in practice - but the api endpoints are https (ssl) and the app is only ever meant to be spun up locally, not on a publically accessible host - so I'm assuming I'm good.
+
+### Enabling API Keys in API Gateway  
+Securing my api with API Keys is a pretty straighforward process. For each method on the `stocknews-items` resource I can just go into it and toggle on "API Key Required". Simple enough.  
+
+With this in place, the app is failing to fetch with a 403 error - nice. I can add a new API key and first test it out in code, hardcoding the key into both the Fetch API requests.  
+
+The addition to the `fetch` calls will be pretty basic:  
+```
+{
+  headers: {
+    "X-API-KEY": "my api key here"
+  },
+  mode: 'cors'
+}
+```  
+
+Adding new API Keys is less clear. In API Gateway > API Keys -  it's easy enough to create a new key. I autogenerate one with the name `stocknews_dev`. With the hardcoded value, requests are still getting 403 though.
+
+Turns out in order for the API Key to be associated with an API it needs to be added to a 'Usage Plan' in API Gateway.  
+
+I create a new usage plan for 'stocknews_dev' and attach it to dev stage of the 'stocknews-classifier-demo' API. I also add the 'stocknews_dev' API Key to it.
+
+Now the requests pass and the app is back to working :)
+
+Hardcoding the API Key is no good though. I can enter it on the front end and pass the value to the fetch call. If any requests come back as 403 then I'll alert the user (myself) and let them input the key again. Should be fine for my purposes. Basically every time I fire up the app to use it I'll need to input my 'stocknews_dev' AWS API Key. And I'm never, ever going to share that with anyone. Ever.
+
+Here's the commit:  
+- https://github.com/smrkem/stockdata2/commit/378ca1a1d7f0375598cc69f9f7c8b911acb437a9  
