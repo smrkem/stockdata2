@@ -10,6 +10,7 @@ class StockNews extends React.Component {
       query: false,
       isFetching: false,
       isShowingResults: false,
+      submittedResults: false,
       errorState: false,
       timer: 0,
       postItems: [],
@@ -42,6 +43,7 @@ class StockNews extends React.Component {
       isFetching: false,
       isShowingResults: false,
       errorState: false,
+      submittedResults: false,
       timer: 0,
       postItems: []
     })
@@ -65,7 +67,10 @@ class StockNews extends React.Component {
       .then(d => {
         console.log('got response', d)
         this.setState({
-          meta: d.meta
+          meta: d.meta,
+          isFetching: false,
+          isShowingResults: false,
+          submittedResults: true
         })
       })
   }

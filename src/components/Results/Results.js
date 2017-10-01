@@ -28,14 +28,16 @@ const Results = (props) => {
   if (props.query && props.isFetching) {
     heading = `Fetching results for ${props.query} ... ${props.timer}s`
   }
-  if (props.query && props.isShowingResults) {
-    heading = `Showing results for ${props.query}`
+  else if (props.query && props.isShowingResults) {
+    heading = `Showing ${props.postItems.length} results for ${props.query}`
     contents = props.postItems.map(
       (item, i) => <PostItem key={i} {...item} setPostCategory={props.setPostCategory} />
     )
     submitControls = <SubmitControls onPostItems={props.onPostItems} />
   }
-
+  else if (props.query && props.submittedResults) {
+    heading = `Submitted results for ${props.query}`
+  }
 
   return (
     <div id="stocknews-results">

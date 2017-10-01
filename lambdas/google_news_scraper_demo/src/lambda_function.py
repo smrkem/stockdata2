@@ -12,6 +12,12 @@ bucket = s3.Bucket('ms-stockknewsitems-demo')
 
 
 def sanitize_content(text):
+    """
+    ToDO:
+    This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies.
+
+    A cookie is a piece of data stored by your browser or device that helps websites like this one recognize return visitors. We use cookies to give you the best experience on BNA.com. Some cookies are also necessary for the technical operation of our website. If you continue browsing, you agree to this site’s use of cookies.
+    """
     bad_patterns = [
         r"^<!--(.*?)-->$",
         r"^.*document\.get.*$",
@@ -31,17 +37,15 @@ def sanitize_content(text):
 
 def grab_contents(url):
     out = []
-    req = urllib.request.Request(url, data=None, headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-    })
+    try:
+        req = urllib.request.Request(url, data=None, headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+        })
 
-    sauce = urllib.request.urlopen(req).read()
-    soup = bs.BeautifulSoup(sauce, "html.parser")
-    for h_type in ['h2', 'h3', 'h4']:
-        for heading in soup.find_all(h_type):
-            sanitized = sanitize_content(heading.text)
-            if len(sanitized) > 5:
-                out.append(sanitized)
+        sauce = urllib.request.urlopen(req).read()
+        soup = bs.BeautifulSoup(sauce, "html.parser")
+    except:
+        return False
 
     for paragraph in soup.find_all('p'):
         sanitized = sanitize_content(paragraph.text)
@@ -59,12 +63,14 @@ def fetch_posts(q, previous_urls):
         qs = parse_qs(urlparse(item.link).query)
         link = qs['url'][0]
         if link not in previous_urls:
-            out.append({
-                'title': item.title,
-                'published': item.published,
-                'link': link,
-                'contents': grab_contents(link)
-            })
+            contents = grab_contents(link)
+            if contents:
+                out.append({
+                    'title': item.title,
+                    'published': item.published,
+                    'link': link,
+                    'contents': contents
+                })
     return out
 
 
@@ -89,7 +95,7 @@ def lambda_handler(event, context):
     print("Query: {}".format(q))
 
     meta = get_meta()
-    posts = fetch_posts(q, meta['url_history'])
+    posts = fetch_posts(q, [])
     print("ITEM COUNT: {}".format(len(posts)))
 
     output = {
@@ -105,7 +111,7 @@ def lambda_handler(event, context):
 
 if __name__ == "__main__":
     event = { 'queryStringParameters': {
-            'q': 'biostage'
+            'q': 'gliead sciences'
         }
     }
     lambda_handler(event, None)
