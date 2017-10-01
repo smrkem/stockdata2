@@ -2,11 +2,13 @@ import React from 'react'
 import Results from '../Results/Results'
 import CompanyNameInput from '../CompanyNameInput/CompanyNameInput'
 import CurrentMeta from '../CurrentMeta/CurrentMeta'
+import APIKeyInput from '../APIKeyInput/APIKeyInput'
 
 class StockNews extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      apiKey: "",
       query: false,
       isFetching: false,
       isShowingResults: false,
@@ -22,6 +24,12 @@ class StockNews extends React.Component {
     }
     this.apiUrl = 'https://1kddb733mf.execute-api.us-east-1.amazonaws.com/dev'
     this.timer = null
+  }
+
+  onApiKeyChange(newval) {
+    this.setState({
+      apiKey: newval
+    })
   }
 
   onSetPostCategory(link, cat) {
@@ -60,6 +68,9 @@ class StockNews extends React.Component {
   onPostItems(data) {
     fetch(this.apiUrl + '/stocknews-items', {
       method: 'post',
+      headers: {
+      "X-API-KEY": this.state.apiKey
+    },
       body: JSON.stringify(this.state.postItems),
       mode: 'cors'
     })
@@ -76,9 +87,17 @@ class StockNews extends React.Component {
   }
 
   render() {
+    let apiKeyInput = ""
+    if (this.state.errorState) {
+      apiKeyInput = <APIKeyInput
+        onApiKeyChange={(newVal) => this.onApiKeyChange(newVal) }
+        apiKey={this.state.apiKey}
+      />
+    }
     return (
       <div className="container" id="stocknews-container">
         <CompanyNameInput setQuery={(q) => this.onNewQuery(q)} />
+        { apiKeyInput }
         <CurrentMeta meta={this.state.meta} />
         <Results
           {...this.state}
@@ -94,17 +113,23 @@ class StockNews extends React.Component {
 
     let url = this.apiUrl + '/stocknews-items?q=' + query
     fetch(url, {
+      headers: {
+        "X-API-KEY": this.state.apiKey
+      },
       mode: 'cors'
     })
     .then(response => {
+      console.log("RESPONSE:", response)
       this.checkRespone(response)
       return response.json()
     })
     .then(data => {
       this.setResults(data)
     })
-    .catch(err => {
+    .catch((err) => {
       clearInterval(this.timer)
+      console.log("IN CATCH:", err)
+      console.log("IN CATCH:", typeof err)
       this.setState({ errorState: err.toString() })
     })
   }
@@ -125,6 +150,7 @@ class StockNews extends React.Component {
   }
 
   checkRespone(response) {
+    console.log("CHECKING RESPONSE", response)
     // check also for response.status == 200
     if (!response.ok) {
       console.log("Error...")
