@@ -13,7 +13,7 @@ bucket = s3.Bucket('ms-stockknewsitems-demo')
 
 def sanitize_content(text):
     """
-    ToDO:
+    ToDO: Refine sanitization where needed. Example: remove these paragraphs:
     This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies.
 
     A cookie is a piece of data stored by your browser or device that helps websites like this one recognize return visitors. We use cookies to give you the best experience on BNA.com. Some cookies are also necessary for the technical operation of our website. If you continue browsing, you agree to this site’s use of cookies.
@@ -56,12 +56,14 @@ def grab_contents(url):
 
 
 def fetch_posts(q, previous_urls):
-    url = "http://news.google.com/news?q={}&output=rss".format(q)
+    # previous google news endpoint
+    # url = "http://news.google.com/news/?q={}&output=rss".format(q)
+    url = "http://news.google.com/news/rss?q={}".format(q)
+
     d = feedparser.parse(url)
     out = []
     for item in d.entries:
-        qs = parse_qs(urlparse(item.link).query)
-        link = qs['url'][0]
+        link = item.link
         if link not in previous_urls:
             contents = grab_contents(link)
             if contents:
